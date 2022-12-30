@@ -15,7 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-//@EnableWebSecurity
 public class SpringSecurityConfig {
 
     public final CustomUserDetailsService customUserDetailsService;
@@ -27,7 +26,7 @@ public class SpringSecurityConfig {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
-    // PasswordEncoderBean. Deze kun je overal in je applicatie injecteren waar nodig.
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -46,7 +45,7 @@ public class SpringSecurityConfig {
 
 
 
-    // Authorizatie met jwt
+
     @Bean
     protected SecurityFilterChain filter (HttpSecurity http) throws Exception {
 

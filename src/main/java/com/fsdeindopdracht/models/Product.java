@@ -3,10 +3,10 @@ package com.fsdeindopdracht.models;
 import lombok.*;
 import javax.persistence.*;
 
-@Setter
 @Getter
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Builder
 

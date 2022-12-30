@@ -7,9 +7,10 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@ToString
 
 @Entity
 @Table(name = "special_offer")

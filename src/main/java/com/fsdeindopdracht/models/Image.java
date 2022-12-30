@@ -3,8 +3,8 @@ package com.fsdeindopdracht.models;
 import lombok.*;
 import javax.persistence.*;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

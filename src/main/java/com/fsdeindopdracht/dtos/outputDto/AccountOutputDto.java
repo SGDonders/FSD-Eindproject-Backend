@@ -7,10 +7,15 @@ import lombok.Setter;
 @Setter
 
 public class AccountOutputDto {
-    private String username;
-    private String password;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private boolean enabled;
+
+    public Long id;
+    public String username;
+    public String password;
+    public String firstName;
+    public String lastName;
+    public String adress;
+    public String zipCode;
+    public Long phoneNumber;
+    public String email;
+    public boolean enabled;
 }

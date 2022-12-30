@@ -6,11 +6,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 
-@Builder
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@ToString
 
 @Entity
 @IdClass(AuthorityKey.class)

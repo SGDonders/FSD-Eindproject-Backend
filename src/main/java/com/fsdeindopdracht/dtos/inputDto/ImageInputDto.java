@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 
 public class ImageInputDto {
+
     private Long id;
     private Double name;
     private Double type;

@@ -6,9 +6,10 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@ToString
 
 @Entity
 @Table(name = "accounts")
@@ -20,9 +21,11 @@ public class Account {
 
     private String username;
     private String password;
-    private String email;
     private String firstName;
     private String lastName;
+    private String Adress;
+    private String zipCode;
+    private Long phoneNumber;
+    private String email;
     private boolean enabled;
-    //private List<Authority> roles;
 }
