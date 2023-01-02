@@ -7,13 +7,13 @@ import lombok.Setter;
 @Setter
 
 public class ProductInputDto {
-    private Long id;
-    private String name;
-    private Double height;
-    private Double weight;
-    private String size;
-    private String description;
-    private String packagingMaterial;
-    private Long quantity;
-    private String category;
+    public Long id;
+    public String name;
+    public Double height;
+    public Double weight;
+    public String size;
+    public String description;
+    public String packagingMaterial;
+    public Long quantity;
+    public String category;
 }

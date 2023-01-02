@@ -16,14 +16,14 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    private Long id;
+    public Long id;
 
-    private String name;
-    private Double height;
-    private Double weight;
-    private String size;
-    private String description;
-    private String packagingMaterial;
-    private Long quantity;
-    private String category;
+    public String name;
+    public Double height;
+    public Double weight;
+    public String size;
+    public String description;
+    public String packagingMaterial;
+    public Long quantity;
+    public String category;
 }

@@ -8,12 +8,12 @@ import lombok.Setter;
 @Setter
 
 public class OrderOutputDto {
-    private Long id;
-    private String orderHeader;
-    private String comment;
-    private String orderNumber;
-    private String orderLine;
-    private String orderTotal;
-    private String orderPayment;
-    private String OrderTaxDetail;
+    public Long id;
+    public String orderHeader;
+    public String comment;
+    public String orderNumber;
+    public String orderLine;
+    public String orderTotal;
+    public String orderPayment;
+    public String OrderTaxDetail;
 }

@@ -9,11 +9,11 @@ import java.time.LocalDate;
 @Setter
 
 public class SpecialOfferInputDto {
-    private Long id;
-    private String name;
-    private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Double discount;
-    private Boolean enabled;
+    public Long id;
+    public String name;
+    public String description;
+    public LocalDate startDate;
+    public LocalDate endDate;
+    public Double discount;
+    public Boolean enabled;
 }

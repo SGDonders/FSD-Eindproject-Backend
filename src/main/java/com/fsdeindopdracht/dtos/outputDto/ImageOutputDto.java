@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 
 public class ImageOutputDto {
-    private Long id;
-    private Double name;
-    private Double type;
-    private Double category;
-    private int Height;
-    private int width;
-    private String filePath;
+    public Long id;
+    public Double name;
+    public Double type;
+    public Double category;
+    public int Height;
+    public int width;
+    public String filePath;
 }

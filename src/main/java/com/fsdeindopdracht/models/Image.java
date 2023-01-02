@@ -21,8 +21,5 @@ public class Image {
 
     private Double name;
     private Double type;
-    private Double category;
-    private int Height;
-    private int width;
     private String filePath;
 }
