@@ -18,17 +18,17 @@ import java.util.Set;
 public class User {
 
     @Id
-    public String username;
+    private String username;
 
-    public String password;
+    private String password;
 
-    public String role;
+    private String role;
 
-    public boolean enabled = true;
+    private boolean enabled = true;
 
-    public String apikey;
+    private String apikey;
 
-    public String email;
+    private String email;
 
     @OneToMany(
             targetEntity = Authority.class,
