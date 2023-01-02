@@ -8,7 +8,10 @@ import com.fsdeindopdracht.repositories.UserRepository;
 import com.fsdeindopdracht.utils.RandomStringGenerator;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,8 +23,13 @@ import java.util.Set;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+
     }
 
 
@@ -51,6 +59,7 @@ public class UserService {
 
     public String createUser(UserDto userDto) {
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userDto.setApikey(randomString);
         User newUser = userRepository.save(toUser(userDto));
         return newUser.getUsername();
@@ -63,7 +72,7 @@ public class UserService {
     public void updateUser(String username, UserDto newUser) {
         if (!userRepository.existsById(username)) throw new RecordNotFoundException();
         User user = userRepository.findById(username).get();
-        user.setPassword(newUser.getPassword());
+        user.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(user);
     }
 

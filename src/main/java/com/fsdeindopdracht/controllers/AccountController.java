@@ -17,7 +17,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/accountcontrollers")
+@RequestMapping("/accounts")
 public class AccountController {
 
     private final AccountService accountService;
@@ -54,7 +54,7 @@ public class AccountController {
 
         Account savedAccount = accountService.createAccount(accountInputDto);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath
-                ().path("/account/" + savedAccount.getId()).toUriString());
+                ().path("/accounts/" + savedAccount.getId()).toUriString());
 
         return ResponseEntity.created(uri).body(savedAccount);
     }

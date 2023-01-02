@@ -15,4 +15,5 @@ public class ImageInputDto {
     private Double category;
     private int Height;
     private int width;
+    private String filePath;
 }

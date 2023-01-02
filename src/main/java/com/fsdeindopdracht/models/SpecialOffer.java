@@ -13,17 +13,17 @@ import java.time.LocalDate;
 @ToString
 
 @Entity
-@Table(name = "special_offer")
+@Table(name = "specialoffer")
 public class SpecialOffer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
 
-    private String name;
-    private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Double discount;
-    private Boolean enabled;
+    public String name;
+    public String description;
+    public LocalDate startDate;
+    public LocalDate endDate;
+    public Double discount;
+    public Boolean enabled;
 }
