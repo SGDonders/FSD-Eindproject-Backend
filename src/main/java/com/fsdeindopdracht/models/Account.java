@@ -23,7 +23,7 @@ public class Account {
     private String password;
     private String firstName;
     private String lastName;
-    private String Adress;
+    private String Address;
     private String zipCode;
     private Long phoneNumber;
     private String email;

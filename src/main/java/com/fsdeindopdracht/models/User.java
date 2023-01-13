@@ -19,15 +19,9 @@ public class User {
 
     @Id
     private String username;
-
     private String password;
-
-    private String role;
-
     private boolean enabled = true;
-
     private String apikey;
-
     private String email;
 
     @OneToMany(
