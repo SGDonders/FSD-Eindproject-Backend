@@ -35,6 +35,6 @@ De student ontwerpt een relationele database, waarin data met onderlinge relatie
 
 De student zet een backend applicatie op met behulp van het Spring-boot framework en maakt gebruik van verschillende architecturale lagen binnen Spring. De student test zijn applicatie met unit-testen en het mockenvan klassen en tevens communiceert de applicatie met een database.
 
-#### 8.Design Patterns & Clean Code 
+#### 8. Design Patterns & Clean Code 
 
 De student schrijft zijn code volgens de afgesproken conventies van Clean Code en ontwikkelt highly cohesive en loose coupled code, door de toepassing van Design Patterns en SOLID.
