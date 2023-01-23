@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import javax.xml.bind.ValidationException;
 import java.net.URI;
 import java.util.List;
-
+@CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/specialoffers")
 public class SpecialOfferController {

@@ -1,5 +1,6 @@
 package com.fsdeindopdracht.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,8 +11,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString
+
 
 @Entity
 @Table(name = "users")
@@ -20,9 +20,11 @@ public class User {
     @Id
     private String username;
     private String password;
-    private boolean enabled = true;
-    private String apikey;
-    private String email;
+
+    @OneToOne(cascade = CascadeType.ALL)
+//    @JsonIgnore
+    private Account account;
+
 
     @OneToMany(
             targetEntity = Authority.class,
@@ -39,5 +41,6 @@ public class User {
     public void removeAuthority(Authority authority) {
         this.authorities.remove(authority);
     }
+
 
 }

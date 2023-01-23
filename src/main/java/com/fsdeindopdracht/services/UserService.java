@@ -1,6 +1,6 @@
 package com.fsdeindopdracht.services;
 
-import com.fsdeindopdracht.dtos.securityDto.UserDto;
+import com.fsdeindopdracht.dtos.registerDto.RegisterDto;
 import com.fsdeindopdracht.execeptions.RecordNotFoundException;
 import com.fsdeindopdracht.models.User;
 import com.fsdeindopdracht.models.Authority;
@@ -32,9 +32,8 @@ public class UserService {
 
     }
 
-
-    public List<UserDto> getUsers() {
-        List<UserDto> collection = new ArrayList<>();
+    public List<RegisterDto> getUsers() {
+        List<RegisterDto> collection = new ArrayList<>();
         List <User> list = userRepository.findAll();
         for (User user : list) {
             collection.add(fromUser(user));
@@ -42,8 +41,8 @@ public class UserService {
         return collection;
     }
 
-    public UserDto getUser(String username) {
-        UserDto dto = new UserDto();
+    public RegisterDto getUser(String username) {
+        RegisterDto dto = new RegisterDto();
         Optional<User> user = userRepository.findById(username);
         if (user.isPresent()){
             dto = fromUser(user.get());
@@ -57,19 +56,19 @@ public class UserService {
         return userRepository.existsById(username);
     }
 
-    public String createUser(UserDto userDto) {
-        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        userDto.setApikey(randomString);
-        User newUser = userRepository.save(toUser(userDto));
-        return newUser.getUsername();
-    }
+//    public String createUser(RegisterDto userDto) {
+////        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
+//        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+////        userDto.setApikey(randomString);
+//        User newUser = userRepository.save(toUser(userDto));
+//        return newUser.getUsername();
+//    }
 
     public void deleteUser(String username) {
         userRepository.deleteById(username);
     }
 
-    public void updateUser(String username, UserDto newUser) {
+    public void updateUser(String username, RegisterDto newUser) {
         if (!userRepository.existsById(username)) throw new RecordNotFoundException();
         User user = userRepository.findById(username).get();
         user.setPassword(passwordEncoder.encode(newUser.getPassword()));
@@ -79,7 +78,7 @@ public class UserService {
     public Set<Authority> getAuthorities(String username) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
         User user = userRepository.findById(username).get();
-        UserDto userDto = fromUser(user);
+        RegisterDto userDto = fromUser(user);
         return userDto.getAuthorities();
     }
 
@@ -99,33 +98,25 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public static UserDto fromUser(User user){
+    public static RegisterDto fromUser(User user){
 
-        var dto = new UserDto();
+        var dto = new RegisterDto();
 
         dto.username = user.getUsername();
         dto.password = user.getPassword();
-        dto.enabled = user.isEnabled();
-        dto.apikey = user.getApikey();
-        dto.email = user.getEmail();
         dto.authorities = user.getAuthorities();
 
         return dto;
     }
 
-    public User toUser(UserDto userDto) {
+    public User toUser(RegisterDto userDto) {
 
         var user = new User();
 
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
-        user.setEnabled(userDto.getEnabled());
-        user.setApikey(userDto.getApikey());
-        user.setEmail(userDto.getEmail());
 
         return user;
     }
 
 }
-
-

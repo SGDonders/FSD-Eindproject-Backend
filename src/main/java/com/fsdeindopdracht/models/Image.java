@@ -7,8 +7,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Builder
+
 
 @Entity
 @Table(name = "images")
