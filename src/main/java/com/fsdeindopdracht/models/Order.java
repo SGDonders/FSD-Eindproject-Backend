@@ -17,7 +17,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-
     private String orderHeader;
     private String comment;
     private String orderNumber;

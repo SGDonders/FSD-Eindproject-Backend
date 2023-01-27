@@ -27,13 +27,9 @@ public class ProductService {
 
         Product newProduct = new Product();
 
-        newProduct.setName(productInputDto.getName());
-        newProduct.setHeight(productInputDto.getHeight());
-        newProduct.setWeight(productInputDto.getWeight());
-        newProduct.setSize(productInputDto.getSize());
-        newProduct.setDescription(productInputDto.getDescription());
-        newProduct.setPackagingMaterial(productInputDto.getPackagingMaterial());
-        newProduct.setQuantity(productInputDto.getQuantity());
+        newProduct.setProductName(productInputDto.getProductName());
+        newProduct.setPrice(productInputDto.getPrice());
+        newProduct.setAvailableStock(productInputDto.getAvailableStock());
         newProduct.setCategory(productInputDto.getCategory());
 
         return productRepository.save(newProduct);
@@ -44,13 +40,9 @@ public class ProductService {
 
         ProductOutputDto productOutputDto = new ProductOutputDto();
 
-        productOutputDto.setName(product.getName());
-        productOutputDto.setHeight(product.getHeight());
-        productOutputDto.setWeight(product.getWeight());
-        productOutputDto.setSize(product.getSize());
-        productOutputDto.setDescription(product.getDescription());
-        productOutputDto.setPackagingMaterial(product.getPackagingMaterial());
-        productOutputDto.setQuantity(product.getQuantity());
+        productOutputDto.setProductName(product.getProductName());
+        productOutputDto.setPrice(product.getPrice());
+        productOutputDto.setAvailableStock(product.getAvailableStock());
         productOutputDto.setCategory(product.getCategory());
 
         return productOutputDto;
@@ -58,16 +50,16 @@ public class ProductService {
 
     // Functie voor GetMapping van alle Products.
     public List<ProductOutputDto> getAllProducts() {
-        List<Product> optionalProduct = productRepository.findAll();
+        List<Product> optionalProducts = productRepository.findAll();
         List<ProductOutputDto> ProductOutputDtoList = new ArrayList<>();
 
-        if (optionalProduct.isEmpty()) {
+        if (optionalProducts.isEmpty()) {
             throw new RecordNotFoundException("Record not found!");
         } else {
-            for (Product ciModule : optionalProduct) {
-                ProductOutputDto ciModuleOutputDto = transferProductToOutputDto(ciModule);
+            for (Product product : optionalProducts) {
+                ProductOutputDto productOutputDto = transferProductToOutputDto(product);
 
-                ProductOutputDtoList.add(ciModuleOutputDto);
+                ProductOutputDtoList.add(productOutputDto);
 
             }
         }
@@ -105,7 +97,7 @@ public class ProductService {
     }
 
 
-    // Functie voor PutMapping.
+    // Functie voor PatchMapping.
     public ProductOutputDto updateProduct(Long id, ProductInputDto productInputDto) {
 
         Optional<Product> optionalProduct = productRepository.findById(id);
@@ -114,26 +106,14 @@ public class ProductService {
 
             Product productUpdate = optionalProduct.get();
 
-            if (productInputDto.getName() != null) {
-                productUpdate.setName(productInputDto.getName());
+            if (productInputDto.getProductName() != null) {
+                productUpdate.setProductName(productInputDto.getProductName());
             }
-            if (productInputDto.getHeight() != null) {
-                productUpdate.setHeight(productInputDto.getHeight());
+            if (productInputDto.getPrice() != null) {
+                productUpdate.setPrice(productInputDto.getPrice());
             }
-            if (productInputDto.getWeight() != null) {
-                productUpdate.setWeight(productInputDto.getWeight());
-            }
-            if (productInputDto.getSize() != null) {
-                productUpdate.setSize(productInputDto.getSize());
-            }
-            if (productInputDto.getDescription() != null) {
-                productUpdate.setDescription(productInputDto.getDescription());
-            }
-            if (productInputDto.getPackagingMaterial() != null) {
-                productUpdate.setPackagingMaterial(productInputDto.getPackagingMaterial());
-            }
-            if (productInputDto.getQuantity() != null) {
-                productUpdate.setQuantity(productInputDto.getQuantity());
+            if (productInputDto.getAvailableStock() != null) {
+                productUpdate.setAvailableStock(productInputDto.getAvailableStock());
             }
             if (productInputDto.getCategory() != null) {
                 productUpdate.setCategory(productInputDto.getCategory());

@@ -103,6 +103,8 @@ public class AccountService {
     }
 
     //Functie voor PostMapping.
+
+    @Transactional
     public AccountOutputDto createUserAccount(RegisterDto registerDto) {
 
         User newUser = new User();
