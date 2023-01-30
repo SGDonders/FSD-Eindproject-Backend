@@ -17,7 +17,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-    private String name;
+    private String fileName;
     private String type;
     private String filePath;
 }

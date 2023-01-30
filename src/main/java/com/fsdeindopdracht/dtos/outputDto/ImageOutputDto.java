@@ -9,7 +9,7 @@ import lombok.Setter;
 public class ImageOutputDto {
 
     public Long id;
-    private String name;
+    private String fileName;
     private String type;
     private String filePath;
 }

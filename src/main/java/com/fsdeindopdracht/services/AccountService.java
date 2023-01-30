@@ -63,6 +63,7 @@ public class AccountService {
         return accountOutputDto;
     }
 
+
     // Functie voor GetMapping.
     public AccountOutputDto getAccount(Long id) {
         Optional<Account> requestedAccount = accountRepository.findById(id);
@@ -123,7 +124,7 @@ public class AccountService {
         newAccount.setPhoneNumber(registerDto.getPhoneNumber());
         newAccount.setEmail(registerDto.getEmail());
 
-        accountRepository.save(newAccount);
+//        accountRepository.save(newAccount);
 
         newAccount.setUser(newUser);
         newUser.setAccount(newAccount);

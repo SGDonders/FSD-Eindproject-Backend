@@ -10,7 +10,7 @@ import lombok.Setter;
 public class ImageInputDto {
 
     public Long id;
-    private String name;
+    private String fileName;
     private String type;
     private String filePath;
 }

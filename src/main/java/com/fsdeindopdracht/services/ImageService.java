@@ -26,7 +26,7 @@ public class ImageService {
 
         Image newImage = new Image();
 
-        newImage.setName(imageInputDto.getName());
+        newImage.setFileName(imageInputDto.getFileName());
         newImage.setType(imageInputDto.getType());
         newImage.setFilePath(imageInputDto.getFilePath());
 
@@ -38,7 +38,7 @@ public class ImageService {
 
         ImageOutputDto imageOutputDto = new ImageOutputDto();
 
-        imageOutputDto.setName(image.getName());
+        imageOutputDto.setFileName(image.getFileName());
         imageOutputDto.setType(image.getType());
         imageOutputDto.setFilePath(image.getFilePath());
 
@@ -103,8 +103,8 @@ public class ImageService {
 
             Image imageUpdate = optionalImage.get();
 
-            if (imageInputDto.getName() != null) {
-                imageUpdate.setName(imageInputDto.getName());
+            if (imageInputDto.getFileName() != null) {
+                imageUpdate.setFileName(imageInputDto.getFileName());
             }
             if (imageInputDto.getType() != null) {
                 imageUpdate.setType(imageInputDto.getType());
