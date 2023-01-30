@@ -2,6 +2,7 @@ package com.fsdeindopdracht.controllers;
 
 import com.fsdeindopdracht.dtos.inputDto.AccountInputDto;
 import com.fsdeindopdracht.dtos.outputDto.AccountOutputDto;
+import com.fsdeindopdracht.dtos.registerDto.RegisterDto;
 import com.fsdeindopdracht.models.Account;
 import com.fsdeindopdracht.services.AccountService;
 import com.fsdeindopdracht.utils.Utils;
@@ -15,6 +16,7 @@ import javax.xml.bind.ValidationException;
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin(origins="*")
 
 @RestController
 @RequestMapping("/accounts")
@@ -48,13 +50,13 @@ public class AccountController {
 
     // PostMapping request voor een account.
     @PostMapping("")
-    public ResponseEntity<Object> createAccount(@Valid @RequestBody AccountInputDto accountInputDto, BindingResult bindingResult) throws ValidationException {
+    public ResponseEntity<Object> createAccount(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) throws ValidationException {
 
         Utils.reportErrors(bindingResult);
 
-        Account savedAccount = accountService.createAccount(accountInputDto);
+        AccountOutputDto savedAccount = accountService.createUserAccount(registerDto);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath
-                ().path("/accounts/" + savedAccount.getId()).toUriString());
+                ().path("/accounts/" + savedAccount).toUriString());
 
         return ResponseEntity.created(uri).body(savedAccount);
     }
@@ -67,4 +69,3 @@ public class AccountController {
     }
 
 }
-

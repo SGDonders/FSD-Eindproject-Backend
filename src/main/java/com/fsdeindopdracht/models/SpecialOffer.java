@@ -9,8 +9,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString
+
 
 @Entity
 @Table(name = "specialoffer")

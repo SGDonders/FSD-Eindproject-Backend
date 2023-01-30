@@ -47,9 +47,10 @@ public class SpringSecurityConfig {
         http
                 .csrf().disable()
                 .httpBasic().disable()
+                .cors().and()
                 .authorizeRequests()
                 // Wanneer je deze uncomments, staat je hele security open. Je hebt dan alleen nog een jwt nodig.
-//                .antMatchers("/**").permitAll()
+                .antMatchers("/**").permitAll()
 
 
                 //--------------------------------Endpoint users--------------------------------------------//
@@ -59,9 +60,14 @@ public class SpringSecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
                 //------------------------------Endpoint accounts-------------------------------------------//
                 .antMatchers(HttpMethod.POST, "/accounts").permitAll()
-                .antMatchers(HttpMethod.GET,"/accounts").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/accounts").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.POST,"/accounts/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/accounts/**").hasRole("ADMIN")
+                //------------------------------Endpoint products-------------------------------------------//
+                .antMatchers(HttpMethod.POST, "/product").permitAll()
+                .antMatchers(HttpMethod.GET,"/product").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST,"/product/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN")
                 //----------------------------Endpoint authentication---------------------------------------//
                 .antMatchers("/authenticated").authenticated()
                 .antMatchers("/authenticate").permitAll()

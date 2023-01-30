@@ -1,6 +1,6 @@
 package com.fsdeindopdracht.services;
 
-import com.fsdeindopdracht.dtos.securityDto.UserDto;
+import com.fsdeindopdracht.dtos.registerDto.RegisterDto;
 import com.fsdeindopdracht.models.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        UserDto userDto = userService.getUser(username);
+        RegisterDto userDto = userService.getUser(username);
 
 
         String password = userDto.getPassword();

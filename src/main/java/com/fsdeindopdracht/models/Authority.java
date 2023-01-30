@@ -11,8 +11,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString
+
 
 @Entity
 @IdClass(AuthorityKey.class)

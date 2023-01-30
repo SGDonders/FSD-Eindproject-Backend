@@ -1,6 +1,6 @@
 package com.fsdeindopdracht.controllers;
 
-import com.fsdeindopdracht.dtos.securityDto.UserDto;
+import com.fsdeindopdracht.dtos.registerDto.RegisterDto;
 import com.fsdeindopdracht.execeptions.BadRequestException;
 import com.fsdeindopdracht.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
+@CrossOrigin(origins="*")
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
@@ -23,37 +23,37 @@ public class UserController {
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<List<UserDto>> getUsers() {
+    public ResponseEntity<List<RegisterDto>> getUsers() {
 
-        List<UserDto> userDtos = userService.getUsers();
+        List<RegisterDto> userDtos = userService.getUsers();
 
         return ResponseEntity.ok().body(userDtos);
     }
 
     @GetMapping(value = "/{username}")
-    public ResponseEntity<UserDto> getUser(@PathVariable("username") String username) {
+    public ResponseEntity<RegisterDto> getUser(@PathVariable("username") String username) {
 
-        UserDto optionalUser = userService.getUser(username);
+        RegisterDto optionalUser = userService.getUser(username);
 
 
         return ResponseEntity.ok().body(optionalUser);
 
     }
 
-    @PostMapping(value = "")
-    public ResponseEntity<UserDto> createKlant(@RequestBody UserDto dto) {;
-
-        String newUsername = userService.createUser(dto);
-        userService.addAuthority(newUsername, "ROLE_USER");
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
-                .buildAndExpand(newUsername).toUri();
-
-        return ResponseEntity.created(location).build();
-    }
+//    @PostMapping(value = "")
+//    public ResponseEntity<RegisterDto> createKlant(@RequestBody RegisterDto dto) {;
+//
+//        String newUsername = userService.createUser(dto);
+//        userService.addAuthority(newUsername, "ROLE_USER");
+//
+//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
+//                .buildAndExpand(newUsername).toUri();
+//
+//        return ResponseEntity.created(location).build();
+//    }
 
     @PutMapping(value = "/{username}")
-    public ResponseEntity<UserDto> updateKlant(@PathVariable("username") String username, @RequestBody UserDto dto) {
+    public ResponseEntity<RegisterDto> updateKlant(@PathVariable("username") String username, @RequestBody RegisterDto dto) {
 
         userService.updateUser(username, dto);
 
