@@ -22,7 +22,7 @@ public class User {
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
-//    @JsonIgnore
+    @JsonIgnore
     private Account account;
 
 

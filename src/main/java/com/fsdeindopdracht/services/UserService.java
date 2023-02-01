@@ -56,13 +56,13 @@ public class UserService {
         return userRepository.existsById(username);
     }
 
-//    public String createUser(RegisterDto userDto) {
-////        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
-//        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-////        userDto.setApikey(randomString);
-//        User newUser = userRepository.save(toUser(userDto));
-//        return newUser.getUsername();
-//    }
+    public String createUser(RegisterDto userDto) {
+//        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+//        userDto.setApikey(randomString);
+        User newUser = userRepository.save(toUser(userDto));
+        return newUser.getUsername();
+    }
 
     public void deleteUser(String username) {
         userRepository.deleteById(username);
@@ -105,6 +105,9 @@ public class UserService {
         dto.username = user.getUsername();
         dto.password = user.getPassword();
         dto.authorities = user.getAuthorities();
+        if(dto.getAccount()== null) {
+            dto.setAccount(user.getAccount());
+        }
 
         return dto;
     }
@@ -115,6 +118,9 @@ public class UserService {
 
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
+        if(userDto.getAccount()!=null) {
+            user.setAccount(userDto.getAccount());
+        }
 
         return user;
     }

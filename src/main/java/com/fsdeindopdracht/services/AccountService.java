@@ -38,6 +38,7 @@ public class AccountService {
 
         Account newAccount = new Account();
 
+        newAccount.setUserName(accountInputDto.userName);
         newAccount.setFirstName(accountInputDto.firstName);
         newAccount.setLastName(accountInputDto.lastName);
         newAccount.setAddress(accountInputDto.address);
@@ -53,19 +54,21 @@ public class AccountService {
 
         AccountOutputDto accountOutputDto = new AccountOutputDto();
 
+        accountOutputDto.setUserName(account.getUserName());
         accountOutputDto.setFirstName(account.getFirstName());
         accountOutputDto.setLastName(account.getLastName());
         accountOutputDto.setAdress(account.getAddress());
         accountOutputDto.setZipCode(account.getZipCode());
         accountOutputDto.setPhoneNumber(account.getPhoneNumber());
         accountOutputDto.setEmail(account.getEmail());
+        accountOutputDto.setUser(account.getUser());
 
         return accountOutputDto;
     }
 
 
     // Functie voor GetMapping.
-    public AccountOutputDto getAccount(Long id) {
+    public AccountOutputDto getAccount(String id) {
         Optional<Account> requestedAccount = accountRepository.findById(id);
 
         if (requestedAccount.isEmpty()) {
@@ -92,7 +95,7 @@ public class AccountService {
     }
 
     //Functie voor deleteMapping.
-    public void deleteAccount(Long id) {
+    public void deleteAccount(String id) {
         Optional<Account> optionalAccount = accountRepository.findById(id);
 
         if (optionalAccount.isEmpty()) {
@@ -105,7 +108,6 @@ public class AccountService {
 
     //Functie voor PostMapping.
 
-    @Transactional
     public AccountOutputDto createUserAccount(RegisterDto registerDto) {
 
         User newUser = new User();
@@ -113,30 +115,34 @@ public class AccountService {
         newUser.setUsername(registerDto.getUsername());
         newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        userRepository.save(newUser);
-
         Account newAccount = new Account();
 
+        newAccount.setUserName(registerDto.getUsername());
         newAccount.setFirstName(registerDto.getFirstName());
         newAccount.setLastName(registerDto.getLastName());
         newAccount.setZipCode(registerDto.getZipCode());
         newAccount.setAddress(registerDto.getAddress());
         newAccount.setPhoneNumber(registerDto.getPhoneNumber());
         newAccount.setEmail(registerDto.getEmail());
+        newAccount.setUser(registerDto.getUser());
 
-//        accountRepository.save(newAccount);
-
-        newAccount.setUser(newUser);
+        userRepository.save(newUser);
+        accountRepository.save(newAccount);
         newUser.setAccount(newAccount);
+
+        assignAccountToUser(newUser.getUsername(), newAccount.getUserName());
+
 
         accountRepository.save(newAccount);
         userRepository.save(newUser);
+
+
 
         return transferAccountToOutputDto(newAccount);
     }
 
     // Functie voor patchMapping.
-    public AccountOutputDto updateAccount(Long id, AccountInputDto accountInputDto) {
+    public AccountOutputDto updateAccount(String id, AccountInputDto accountInputDto) {
         Optional<Account> optionalAccount = accountRepository.findById(id);
 
         if (optionalAccount.isPresent()) {
@@ -170,5 +176,17 @@ public class AccountService {
         }
     }
 
+    public void assignAccountToUser(String id, String accountId) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if (optionalUser.isPresent() && optionalAccount.isPresent()) {
+            User user = optionalUser.get();
+            Account account = optionalAccount.get();
+            account.setUser(user);
+            accountRepository.save(account);
+        } else {
+            throw new RecordNotFoundException();
 
+        }
+        }
 }

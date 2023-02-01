@@ -50,11 +50,11 @@ public class SpringSecurityConfig {
                 .cors().and()
                 .authorizeRequests()
                 // Wanneer je deze uncomments, staat je hele security open. Je hebt dan alleen nog een jwt nodig.
-                .antMatchers("/**").permitAll()
+//                .antMatchers("/**").permitAll()
 
 
                 //--------------------------------Endpoint users--------------------------------------------//
-                .antMatchers(HttpMethod.POST, "/users").permitAll()
+//                .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST,"/users/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
