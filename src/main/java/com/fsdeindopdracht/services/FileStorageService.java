@@ -8,7 +8,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,12 +19,11 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class FileStorageService {
 
-    //    The next line is also possible instead of line 14 and 15
-//    private static String storageLocation = "/Users/vanoo/IdeaProjects/upload-download/uploads";
     @Value("${my.upload_location}")
     private Path fileStoragePath;
     private final String fileStorageLocation;
@@ -40,9 +41,10 @@ public class FileStorageService {
 
     }
 
+    // Functie voor post request file.
     public String storeFile(MultipartFile file) {
 
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String fileName = "UploadFarmerPicture.jpg";
 
         Path filePath = Paths.get(fileStoragePath + File.separator + fileName);
 
@@ -88,4 +90,6 @@ public class FileStorageService {
         }
         return list;
     }
+
+
 }

@@ -34,7 +34,7 @@ public class SpecialOfferService {
         newSpecialOffer.setDiscount(specialOfferInputDto.getDiscount());
         newSpecialOffer.setEnabled(specialOfferInputDto.getEnabled());
 
-        return specialOfferRepository.save(newSpecialOffer);
+        return newSpecialOffer;
     }
 
     // Wrapper Functie
@@ -101,7 +101,7 @@ public class SpecialOfferService {
     }
 
 
-    // Functie voor PutMapping.
+    // Functie voor PatchMapping.
     public SpecialOfferOutputDto updateSpecialOffer(Long id, SpecialOfferInputDto specialOfferInputDto) {
 
         Optional<SpecialOffer> optionalSpecialOffer = specialOfferRepository.findById(id);

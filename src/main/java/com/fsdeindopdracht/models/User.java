@@ -32,14 +32,32 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
-
     private Set<Authority> authorities = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Order order;
 
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
     }
     public void removeAuthority(Authority authority) {
         this.authorities.remove(authority);
+    }
+
+    public User(String username) {
+        this.username = username;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+        order.setUser(this);
+    }
+
+    public void removeOrder() {
+        if (order != null) {
+            order.setUser(null);
+            order = null;
+        }
     }
 
 

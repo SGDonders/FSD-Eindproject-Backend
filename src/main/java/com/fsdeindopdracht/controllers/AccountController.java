@@ -67,9 +67,8 @@ public class AccountController {
 
     // PutMapping request voor een account.
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateAccount(@PathVariable String id, @RequestBody AccountInputDto accountInputDto) {
-        AccountOutputDto accountOutputDto = accountService.updateAccount(id, accountInputDto);
-        return ResponseEntity.ok().body(accountOutputDto);
+    public ResponseEntity<AccountOutputDto> updateProfile(@PathVariable String id, @RequestBody AccountInputDto accountInputDto) {
+        return ResponseEntity.ok(accountService.updateProfile(id, accountInputDto));
     }
 
 }

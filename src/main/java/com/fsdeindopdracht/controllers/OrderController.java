@@ -3,7 +3,9 @@ package com.fsdeindopdracht.controllers;
 import com.fsdeindopdracht.dtos.inputDto.OrderInputDto;
 import com.fsdeindopdracht.dtos.outputDto.OrderOutputDto;
 import com.fsdeindopdracht.models.Order;
+import com.fsdeindopdracht.models.User;
 import com.fsdeindopdracht.services.OrderService;
+import com.fsdeindopdracht.services.UserService;
 import com.fsdeindopdracht.utils.Utils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,14 +23,17 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
+    private final UserService userService;
+
+    public OrderController(OrderService orderService, UserService userService) {
         this.orderService = orderService;
+        this.userService = userService;
     }
 
 
-    // GetMapping request alle Orders.
+    // GetMapping request alle Order.
     @GetMapping("")
-    public ResponseEntity<List<OrderOutputDto>> getAllOrders() {
+    public ResponseEntity<List<OrderOutputDto>> getAllOrder() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
@@ -47,26 +52,25 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
+    // PostMapping request voor een order.
 
-    // PostMapping request voor een Order.
     @PostMapping("")
     public ResponseEntity<Object> createOrder(@Valid @RequestBody OrderInputDto orderInputDto,
-                                                 BindingResult bindingResult) throws ValidationException {
+                                              BindingResult bindingResult) throws ValidationException {
         Utils.reportErrors(bindingResult);
-
         Order savedOrder = orderService.createOrder(orderInputDto);
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath
-                ().path("/Order/" + savedOrder.getId()).toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/Order/" + savedOrder.getId()).toUriString());
 
         return ResponseEntity.created(uri).body(savedOrder);
     }
 
 
+
     // PutMapping voor een Order.
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateOrder(@PathVariable Long id, @RequestBody OrderInputDto orderInputDto) {
-        OrderOutputDto orderOutputDto = orderService.updateOrder(id, orderInputDto);
-        return ResponseEntity.ok().body(orderOutputDto);
+        OrderOutputDto invoiceOutputDto = orderService.updateOrder(id, orderInputDto);
+        return ResponseEntity.ok().body(invoiceOutputDto);
     }
 }
 

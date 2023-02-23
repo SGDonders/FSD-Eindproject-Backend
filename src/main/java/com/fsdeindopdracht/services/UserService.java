@@ -5,7 +5,6 @@ import com.fsdeindopdracht.execeptions.RecordNotFoundException;
 import com.fsdeindopdracht.models.User;
 import com.fsdeindopdracht.models.Authority;
 import com.fsdeindopdracht.repositories.UserRepository;
-import com.fsdeindopdracht.utils.RandomStringGenerator;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +64,12 @@ public class UserService {
     }
 
     public void deleteUser(String username) {
-        userRepository.deleteById(username);
+        Optional<User> optionalUser = userRepository.findById(username);
+        if(optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException("User already removed or doesn't exist!");
+        }else {
+            userRepository.deleteById(username);
+        }
     }
 
     public void updateUser(String username, RegisterDto newUser) {

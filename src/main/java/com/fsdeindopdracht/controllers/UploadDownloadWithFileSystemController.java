@@ -6,6 +6,7 @@ import com.fsdeindopdracht.services.DatabaseService;
 import com.fsdeindopdracht.services.FileStorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +32,12 @@ public class UploadDownloadWithFileSystemController {
         this.databaseService = databaseService;
     }
 
-    //    post for single upload
-    @PostMapping("single/upload")
+//        post for single upload
+    @PostMapping("/single/upload")
     public FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file){
 
         String fileName = fileStorageService.storeFile(file);
 
-        // next line makes url. example "http://localhost:8080/download/naam.jpg"
         String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(fileName).toUriString();
 
         String contentType = file.getContentType();
@@ -45,15 +45,11 @@ public class UploadDownloadWithFileSystemController {
         return new FileUploadResponse(fileName, contentType, url );
     }
 
-    //    get for single download
     @GetMapping("/download/{fileName}")
     ResponseEntity<Resource> downLoadSingleFile(@PathVariable String fileName, HttpServletRequest request) {
 
         Resource resource = fileStorageService.downLoadFile(fileName);
 
-//        this mediaType decides witch type you accept if you only accept 1 type
-//        MediaType contentType = MediaType.IMAGE_JPEG;
-//        this is going to accept multiple types
         String mimeType;
 
         try{
@@ -67,6 +63,9 @@ public class UploadDownloadWithFileSystemController {
 //        for showing image in browser
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName=" + resource.getFilename()).body(resource);
     }
+
+
+
 
     //    get all names in directory
     @GetMapping("/download/allNames")
@@ -118,5 +117,8 @@ public class UploadDownloadWithFileSystemController {
         response.setStatus(200);
         response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=zipfile");
     }
+
+
+
 
 }
