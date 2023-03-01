@@ -55,7 +55,7 @@ public class SpringSecurityConfig {
                 //--------------------------------Endpoint fileupload------------------------------ -------//
                 .antMatchers(HttpMethod.POST, "single/upload/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/download/{fileName}").permitAll()
-                .antMatchers(HttpMethod.POST, "single/uploadDB").permitAll()
+                .antMatchers(HttpMethod.POST, "single/uploadDB/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/downloadDB/{fileName}").permitAll()
 
                 //--------------------------------Endpoint orders-------------------------------------------//

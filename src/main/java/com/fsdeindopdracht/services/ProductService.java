@@ -4,11 +4,13 @@ package com.fsdeindopdracht.services;
 import com.fsdeindopdracht.dtos.inputDto.ProductInputDto;
 import com.fsdeindopdracht.dtos.outputDto.ProductOutputDto;
 import com.fsdeindopdracht.execeptions.RecordNotFoundException;
+import com.fsdeindopdracht.models.FileDocument;
 import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.repositories.ProductRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +70,8 @@ public class ProductService {
 
     // Functie voor PostMapping
     public Product createProduct(ProductInputDto productInputDto) {
+
+
         Product newProduct = transferInputDtoToProduct(productInputDto);
         Long maxId = productRepository.findMaxId();
         if (maxId == null) {
@@ -75,6 +79,7 @@ public class ProductService {
         } else {
             newProduct.setId(maxId + 1);
         }
+
         return productRepository.save(newProduct);
     }
 
@@ -110,6 +115,13 @@ public class ProductService {
     }
 
 
+    // koppelfunctie voor product en image
+    public void saveProductWithImage(Product product, FileDocument fileDocument) {
+        product.setFileDocument(fileDocument);
+        fileDocument.setProduct(product);
+        productRepository.save(product);
+    }
+
 
     // Wrapper functie
     public Product transferInputDtoToProduct(ProductInputDto productInputDto) {
@@ -120,6 +132,7 @@ public class ProductService {
         newProduct.setPrice(productInputDto.getPrice());
         newProduct.setAvailableStock(productInputDto.getAvailableStock());
         newProduct.setCategory(productInputDto.getCategory());
+        newProduct.setFileDocument(productInputDto.getFileDocument());
 
         return newProduct;
     }
@@ -134,6 +147,7 @@ public class ProductService {
         productOutputDto.setPrice(product.getPrice());
         productOutputDto.setAvailableStock(product.getAvailableStock());
         productOutputDto.setCategory(product.getCategory());
+        productOutputDto.setFileDocument(product.getFileDocument());
 
         return productOutputDto;
     }

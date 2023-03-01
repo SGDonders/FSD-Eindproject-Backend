@@ -1,8 +1,11 @@
 package com.fsdeindopdracht.services;
 
+import com.fsdeindopdracht.execeptions.ProductNotFoundException;
 import com.fsdeindopdracht.models.FileUploadResponse;
 import com.fsdeindopdracht.models.FileDocument;
+import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.repositories.DocFileRepository;
+import com.fsdeindopdracht.repositories.ProductRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -25,8 +28,11 @@ import java.util.zip.ZipOutputStream;
 public class DatabaseService {
     private final DocFileRepository doc;
 
-    public DatabaseService(DocFileRepository doc){
+    private final ProductRepository productRepository;
+
+    public DatabaseService(DocFileRepository doc, ProductRepository productRepository){
         this.doc = doc;
+        this.productRepository = productRepository;
     }
 
 
@@ -35,17 +41,28 @@ public class DatabaseService {
         return doc.findAll();
     }
 
+
+
+
     // Function for postMapping a file.
-    public FileDocument uploadFileDocument(MultipartFile file) throws IOException {
+    public FileDocument uploadFileDocument(MultipartFile file, String productName) throws IOException {
+        Product product = productRepository.findByProductName(productName)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with name " + productName));
+
         String name = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         FileDocument fileDocument = new FileDocument();
         fileDocument.setFileName(name);
         fileDocument.setDocFile(file.getBytes());
+        fileDocument.setProduct(product);
 
         doc.save(fileDocument);
 
         return fileDocument;
     }
+
+
+
+
 
     // Function for getMapping one file.
     public ResponseEntity<byte[]> singleFileDownload(String fileName, HttpServletRequest request){

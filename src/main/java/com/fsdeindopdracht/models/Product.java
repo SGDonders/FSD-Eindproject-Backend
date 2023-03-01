@@ -30,7 +30,6 @@ public class Product {
     @JsonIgnore
     private List<Order> orders;
 
-
-
-
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private FileDocument fileDocument;
 }

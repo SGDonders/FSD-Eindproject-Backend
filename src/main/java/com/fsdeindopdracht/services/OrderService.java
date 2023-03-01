@@ -19,10 +19,10 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    private static OrderRepository orderRepository;
-    private static ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
-    private static UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public OrderService(OrderRepository orderRepository,
                         ProductRepository productRepository, UserRepository userRepository) {
@@ -101,7 +101,6 @@ public class OrderService {
 
         orderRepository.save(newOrder);
 
-
         return newOrder;
     }
 
@@ -140,19 +139,6 @@ public class OrderService {
         } else {
             throw new RecordNotFoundException("Order not found!");
 
-        }
-    }
-
-    public static void assignOrderToUser(Long id, String userid) {
-        Optional<Order> optionalOrder = orderRepository.findById(id);
-        Optional<User> optionalUser = userRepository.findById(userid);
-        if (optionalOrder.isPresent() && optionalUser.isPresent()) {
-            Order order = optionalOrder.get();
-            User user = optionalUser.get();
-            user.setOrder(order);
-            userRepository.save(user);
-        } else {
-            throw new RecordNotFoundException();
         }
     }
 

@@ -25,18 +25,18 @@ public class UploadDownloadWithDatabaseController {
         this.databaseService = databaseService;
     }
 
-    @PostMapping("single/uploadDb")
-    public FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping("single/uploadDb/{productname}")
+    public FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file,  @PathVariable String productname) throws IOException {
 
-
-        // next line makes url. example "http://localhost:8080/download/naam.jpg"
-        FileDocument fileDocument = databaseService.uploadFileDocument(file);
+        FileDocument fileDocument = databaseService.uploadFileDocument(file, productname);
         String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFromDB/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
 
         String contentType = file.getContentType();
 
         return new FileUploadResponse(fileDocument.getFileName(), url, contentType );
     }
+
+
 
     //    get for single download
     @GetMapping("/downloadFromDB/{fileName}")
@@ -45,27 +45,6 @@ public class UploadDownloadWithDatabaseController {
         return databaseService.singleFileDownload(fileName, request);
     }
 
-    //    post for multiple uploads to database
-    @PostMapping("/multiple/upload/db")
-    List<FileUploadResponse> multipleUpload(@RequestParam("files") MultipartFile [] files) {
 
-        if(files.length > 7) {
-            throw new RuntimeException("to many files selected");
-        }
 
-        return databaseService.createMultipleUpload(files);
-
-    }
-
-    @GetMapping("zipDownload/db")
-    public void zipDownload(@RequestBody String[] files, HttpServletResponse response) throws IOException {
-
-        databaseService.getZipDownload(files, response);
-
-    }
-
-    @GetMapping("/getAll/db")
-    public Collection<FileDocument> getAllFromDB(){
-        return databaseService.getALlFromDB();
-    }
 }

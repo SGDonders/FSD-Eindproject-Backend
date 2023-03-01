@@ -1,5 +1,6 @@
 package com.fsdeindopdracht.dtos.outputDto;
 
+import com.fsdeindopdracht.models.FileDocument;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,4 +14,6 @@ public class ProductOutputDto {
     public Double price;
     public Double availableStock;
     public String category;
+
+    public FileDocument fileDocument;
 }
