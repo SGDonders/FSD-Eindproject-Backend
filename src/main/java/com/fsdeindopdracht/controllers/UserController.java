@@ -23,6 +23,8 @@ public class UserController {
         this.userService = userService;
     }
 
+
+
     @GetMapping(value = "")
     public ResponseEntity<List<RegisterDto>> getUsers() {
 

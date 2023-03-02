@@ -32,26 +32,26 @@ public class AccountController {
     }
 
 
-    // GetMapping request alle accounts.
+    // GetMapping request all accounts.
     @GetMapping("")
     public ResponseEntity<List<AccountOutputDto>> getAllAccounts() {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
-    // GetMapping request voor één account.
+    // GetMapping request account.
     @GetMapping("{id}")
     public ResponseEntity<AccountOutputDto> getAccount(@PathVariable String id) {
         return ResponseEntity.ok(accountService.getAccount(id));
     }
 
-    // DeleteMapping request voor een account.
+    // DeleteMapping request account.
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable String id) {
         accountService.deleteAccount(id); //
         return ResponseEntity.noContent().build();
     }
 
-    // PostMapping request voor een account.
+    // PostMapping request account.
     @PostMapping("")
     public ResponseEntity<Object> createAccount(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) throws ValidationException {
 
@@ -65,7 +65,7 @@ public class AccountController {
         return ResponseEntity.created(uri).body(savedAccount);
     }
 
-    // PutMapping request voor een account.
+    // PutMapping request account.
     @PutMapping("/{id}")
     public ResponseEntity<AccountOutputDto> updateProfile(@PathVariable String id, @RequestBody AccountInputDto accountInputDto) {
         return ResponseEntity.ok(accountService.updateProfile(id, accountInputDto));
