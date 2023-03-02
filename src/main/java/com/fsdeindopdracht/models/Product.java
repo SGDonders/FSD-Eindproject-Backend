@@ -31,5 +31,5 @@ public class Product {
     private List<Order> orders;
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private FileDocument fileDocument;
+    private Image image;
 }

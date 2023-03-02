@@ -1,10 +1,8 @@
 package com.fsdeindopdracht.dtos.inputDto;
 
-import com.fsdeindopdracht.models.FileDocument;
+import com.fsdeindopdracht.models.Image;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.File;
 
 @Getter
 @Setter
@@ -15,5 +13,5 @@ public class ProductInputDto {
     public Double availableStock;
     public String category;
 
-    public FileDocument fileDocument;
+    public Image image;
 }

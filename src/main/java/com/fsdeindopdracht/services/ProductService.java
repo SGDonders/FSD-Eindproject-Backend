@@ -4,13 +4,12 @@ package com.fsdeindopdracht.services;
 import com.fsdeindopdracht.dtos.inputDto.ProductInputDto;
 import com.fsdeindopdracht.dtos.outputDto.ProductOutputDto;
 import com.fsdeindopdracht.execeptions.RecordNotFoundException;
-import com.fsdeindopdracht.models.FileDocument;
+import com.fsdeindopdracht.models.Image;
 import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.repositories.ProductRepository;
 
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -116,9 +115,9 @@ public class ProductService {
 
 
     // koppelfunctie voor product en image
-    public void saveProductWithImage(Product product, FileDocument fileDocument) {
-        product.setFileDocument(fileDocument);
-        fileDocument.setProduct(product);
+    public void saveProductWithImage(Product product, Image image) {
+        product.setImage(image);
+        image.setProduct(product);
         productRepository.save(product);
     }
 
@@ -132,7 +131,7 @@ public class ProductService {
         newProduct.setPrice(productInputDto.getPrice());
         newProduct.setAvailableStock(productInputDto.getAvailableStock());
         newProduct.setCategory(productInputDto.getCategory());
-        newProduct.setFileDocument(productInputDto.getFileDocument());
+        newProduct.setImage(productInputDto.getImage());
 
         return newProduct;
     }
@@ -147,7 +146,7 @@ public class ProductService {
         productOutputDto.setPrice(product.getPrice());
         productOutputDto.setAvailableStock(product.getAvailableStock());
         productOutputDto.setCategory(product.getCategory());
-        productOutputDto.setFileDocument(product.getFileDocument());
+        productOutputDto.setImage(product.getImage());
 
         return productOutputDto;
     }
