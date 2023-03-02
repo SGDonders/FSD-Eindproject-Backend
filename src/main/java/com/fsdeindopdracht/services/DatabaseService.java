@@ -2,7 +2,7 @@ package com.fsdeindopdracht.services;
 
 import com.fsdeindopdracht.execeptions.ProductNotFoundException;
 import com.fsdeindopdracht.models.FileUploadResponse;
-import com.fsdeindopdracht.models.FileDocument;
+import com.fsdeindopdracht.models.Image;
 import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.repositories.DocFileRepository;
 import com.fsdeindopdracht.repositories.ProductRepository;
@@ -37,7 +37,7 @@ public class DatabaseService {
 
 
     // Function for getMapping all files.
-    public Collection<FileDocument> getALlFromDB() {
+    public Collection<Image> getALlFromDB() {
         return doc.findAll();
     }
 
@@ -45,19 +45,19 @@ public class DatabaseService {
 
 
     // Function for postMapping a file.
-    public FileDocument uploadFileDocument(MultipartFile file, String productName) throws IOException {
+    public Image uploadFileDocument(MultipartFile file, String productName) throws IOException {
         Product product = productRepository.findByProductName(productName)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with name " + productName));
 
         String name = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        FileDocument fileDocument = new FileDocument();
-        fileDocument.setFileName(name);
-        fileDocument.setDocFile(file.getBytes());
-        fileDocument.setProduct(product);
+        Image image = new Image();
+        image.setFileName(name);
+        image.setDocFile(file.getBytes());
+        image.setProduct(product);
 
-        doc.save(fileDocument);
+        doc.save(image);
 
-        return fileDocument;
+        return image;
     }
 
 
@@ -67,7 +67,7 @@ public class DatabaseService {
     // Function for getMapping one file.
     public ResponseEntity<byte[]> singleFileDownload(String fileName, HttpServletRequest request){
 
-        FileDocument document = doc.findByFileName(fileName);
+        Image document = doc.findByFileName(fileName);
 
     //    this mediaType decides witch type you accept if you only accept 1 type
     //    MediaType contentType = MediaType.IMAGE_JPEG;
@@ -86,14 +86,14 @@ public class DatabaseService {
         Arrays.stream(files).forEach(file -> {
 
             String name = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-            FileDocument fileDocument = new FileDocument();
-            fileDocument.setFileName(name);
+            Image image = new Image();
+            image.setFileName(name);
             try {
-                fileDocument.setDocFile(file.getBytes());
+                image.setDocFile(file.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            doc.save(fileDocument);
+            doc.save(image);
 
     //     next line makes url. example "http://localhost:8080/download/naam.jpg"
             String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFromDB/").path(name).toUriString();
