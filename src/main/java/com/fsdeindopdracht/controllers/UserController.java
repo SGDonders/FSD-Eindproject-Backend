@@ -2,6 +2,7 @@ package com.fsdeindopdracht.controllers;
 
 import com.fsdeindopdracht.dtos.registerDto.RegisterDto;
 import com.fsdeindopdracht.execeptions.BadRequestException;
+import com.fsdeindopdracht.execeptions.UsernameNotFoundException;
 import com.fsdeindopdracht.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ public class UserController {
         this.userService = userService;
     }
 
+
+
     @GetMapping(value = "")
     public ResponseEntity<List<RegisterDto>> getUsers() {
 
@@ -32,25 +35,14 @@ public class UserController {
 
     @GetMapping(value = "/{username}")
     public ResponseEntity<RegisterDto> getUser(@PathVariable("username") String username) {
+        try {
+            RegisterDto user = userService.getUser(username);
+            return ResponseEntity.ok().body(user);
+        } catch (UsernameNotFoundException ex) {
 
-        RegisterDto optionalUser = userService.getUser(username);
-
-
-        return ResponseEntity.ok().body(optionalUser);
-
+            return ResponseEntity.notFound().build();
+        }
     }
-
-//    @PostMapping(value = "")
-//    public ResponseEntity<RegisterDto> createKlant(@RequestBody RegisterDto dto) {;
-//
-//        String newUsername = userService.createUser(dto);
-//        userService.addAuthority(newUsername, "ROLE_USER");
-//
-//        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
-//                .buildAndExpand(newUsername).toUri();
-//
-//        return ResponseEntity.created(location).build();
-//    }
 
     @PutMapping(value = "/{username}")
     public ResponseEntity<RegisterDto> updateKlant(@PathVariable("username") String username, @RequestBody RegisterDto dto) {
@@ -63,7 +55,8 @@ public class UserController {
     @DeleteMapping(value = "/{username}")
     public ResponseEntity<Object> deleteKlant(@PathVariable("username") String username) {
         userService.deleteUser(username);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("User successful deleted");
+
     }
 
     @GetMapping(value = "/{username}/authorities")

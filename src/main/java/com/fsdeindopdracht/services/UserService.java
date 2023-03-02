@@ -5,7 +5,6 @@ import com.fsdeindopdracht.execeptions.RecordNotFoundException;
 import com.fsdeindopdracht.models.User;
 import com.fsdeindopdracht.models.Authority;
 import com.fsdeindopdracht.repositories.UserRepository;
-import com.fsdeindopdracht.utils.RandomStringGenerator;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,16 +55,21 @@ public class UserService {
         return userRepository.existsById(username);
     }
 
-//    public String createUser(RegisterDto userDto) {
-////        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
-//        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-////        userDto.setApikey(randomString);
-//        User newUser = userRepository.save(toUser(userDto));
-//        return newUser.getUsername();
-//    }
+    public String createUser(RegisterDto userDto) {
+//        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+//        userDto.setApikey(randomString);
+        User newUser = userRepository.save(toUser(userDto));
+        return newUser.getUsername();
+    }
 
     public void deleteUser(String username) {
-        userRepository.deleteById(username);
+        Optional<User> optionalUser = userRepository.findById(username);
+        if(optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException("User already removed or doesn't exist!");
+        }else {
+            userRepository.deleteById(username);
+        }
     }
 
     public void updateUser(String username, RegisterDto newUser) {
@@ -105,6 +109,9 @@ public class UserService {
         dto.username = user.getUsername();
         dto.password = user.getPassword();
         dto.authorities = user.getAuthorities();
+        if(dto.getAccount()== null) {
+            dto.setAccount(user.getAccount());
+        }
 
         return dto;
     }
@@ -115,6 +122,9 @@ public class UserService {
 
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
+        if(userDto.getAccount()!=null) {
+            user.setAccount(userDto.getAccount());
+        }
 
         return user;
     }

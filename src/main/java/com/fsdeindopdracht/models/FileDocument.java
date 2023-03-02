@@ -1,7 +1,13 @@
 package com.fsdeindopdracht.models;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
+@Getter
+@Setter
 
 @Entity
 public class FileDocument {
@@ -13,8 +19,16 @@ public class FileDocument {
     private String fileName;
 
     @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] docFile;
 
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "product_name")
+    private Product product;
+
+    public FileDocument() {
+    }
 
     public String getFileName() {
         return fileName;

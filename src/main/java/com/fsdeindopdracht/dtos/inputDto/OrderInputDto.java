@@ -1,6 +1,8 @@
 package com.fsdeindopdracht.dtos.inputDto;
+import java.time.LocalDate;
+import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,12 +10,19 @@ import lombok.Setter;
 @Setter
 
 public class OrderInputDto {
-    public Long id;
-    public String orderHeader;
-    public String comment;
-    public String orderNumber;
-    public String orderLine;
-    public String orderTotal;
-    public String orderPayment;
-    public String OrderTaxDetail;
+
+    private String userName;
+
+    private Double orderTotal;
+
+    private LocalDate orderDate;
+
+    private String pickUpDate;
+
+    private Boolean timeFrame;
+
+
+    private List<String> productNames;
+
+
 }

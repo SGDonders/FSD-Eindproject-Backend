@@ -4,9 +4,14 @@ import com.fsdeindopdracht.dtos.inputDto.OrderInputDto;
 import com.fsdeindopdracht.dtos.outputDto.OrderOutputDto;
 import com.fsdeindopdracht.execeptions.RecordNotFoundException;
 import com.fsdeindopdracht.models.Order;
+import com.fsdeindopdracht.models.Product;
+import com.fsdeindopdracht.models.User;
 import com.fsdeindopdracht.repositories.OrderRepository;
+import com.fsdeindopdracht.repositories.ProductRepository;
+import com.fsdeindopdracht.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,68 +20,40 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
-    public OrderService(OrderRepository orderRepository) {
+    private final UserRepository userRepository;
+
+    public OrderService(OrderRepository orderRepository,
+                        ProductRepository productRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
-    }
-
-
-    // Wrapper functie
-    public Order transferInputDtoToOrder(OrderInputDto orderInputDto) {
-
-        Order newOrder = new Order();
-
-        newOrder.setOrderHeader(orderInputDto.getOrderHeader());
-        newOrder.setComment(orderInputDto.getComment());
-        newOrder.setOrderNumber(orderInputDto.getOrderNumber());
-        newOrder.setOrderLine(orderInputDto.getOrderLine());
-        newOrder.setOrderTotal(orderInputDto.getOrderTotal());
-        newOrder.setOrderPayment(orderInputDto.getOrderPayment());
-        newOrder.setOrderTaxDetail(orderInputDto.getOrderTaxDetail());
-
-
-        return orderRepository.save(newOrder);
-    }
-
-    // Wrapper Functie
-    public OrderOutputDto transferOrderToOutputDto(Order order) {
-
-        OrderOutputDto orderOutputDto = new OrderOutputDto();
-
-        orderOutputDto.setOrderHeader(order.getOrderHeader());
-        orderOutputDto.setComment(order.getComment());
-        orderOutputDto.setOrderNumber(order.getOrderNumber());
-        orderOutputDto.setOrderLine(order.getOrderLine());
-        orderOutputDto.setOrderTotal(order.getOrderTotal());
-        orderOutputDto.setOrderPayment(order.getOrderPayment());
-        orderOutputDto.setOrderTaxDetail(order.getOrderTaxDetail());
-
-        return orderOutputDto;
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     // Functie voor GetMapping van alle Orders.
     public List<OrderOutputDto> getAllOrders() {
         List<Order> optionalOrder = orderRepository.findAll();
-        List<OrderOutputDto> OrderOutputDtoList = new ArrayList<>();
+        List<OrderOutputDto> orderOutputDtoList = new ArrayList<>();
 
         if (optionalOrder.isEmpty()) {
-            throw new RecordNotFoundException("Record not found!");
+            throw new RecordNotFoundException("Order not found!");
         } else {
             for (Order order : optionalOrder) {
                 OrderOutputDto orderOutputDto = transferOrderToOutputDto(order);
 
-                OrderOutputDtoList.add(orderOutputDto);
+                orderOutputDtoList.add(orderOutputDto);
 
             }
         }
-        return OrderOutputDtoList;
+        return orderOutputDtoList;
     }
 
     // Functie voor getMapping één Order.
     public OrderOutputDto getOrder(Long id) {
         Optional<Order> requestedOrder = orderRepository.findById(id);
         if (requestedOrder.isEmpty()) {
-            throw new RecordNotFoundException("Record not found!");
+            throw new RecordNotFoundException("Order not found!");
         } else {
             return transferOrderToOutputDto(requestedOrder.get());
         }
@@ -85,25 +62,51 @@ public class OrderService {
     // Functie voor deleteMapping.
     public void deleteOrder(Long id) {
         Optional<Order> optionalOrder = orderRepository.findById(id);
-        // optional tv.
         if (optionalOrder.isEmpty()) {
-            throw new RecordNotFoundException("Television already removed or doesn't exist!");
-            // throw exception.
+            throw new RecordNotFoundException("Order already removed or doesn't exist!");
         } else {
-            Order OrderObj = optionalOrder.get();
-            // er een tv van.
-            orderRepository.delete(OrderObj);
+            Order orderObj = optionalOrder.get();
+            orderRepository.delete(orderObj);
         }
     }
 
     // Functie voor PostMapping
     public Order createOrder(OrderInputDto orderInputDto) {
+
+        User user;
+
+        Optional<User> optionalUser = userRepository.findById(orderInputDto.getUserName());
+        if (optionalUser.isEmpty()) {
+            throw new RecordNotFoundException("User already removed or doesn't exist!");
+        } else {
+            user = optionalUser.get();
+        }
+
+        List<Product> listOfProducts = new ArrayList<>();
+        for( String productName : orderInputDto.getProductNames()){
+            Optional<Product> optionalProduct = productRepository.findByProductName(productName);
+
+            if(optionalProduct.isEmpty()) {
+                throw new RecordNotFoundException("No products with this name");
+            }else {
+                Product product = optionalProduct.get();
+                listOfProducts.add(product);
+            }
+        }
+
         Order newOrder = transferInputDtoToOrder(orderInputDto);
-        return orderRepository.save(newOrder);
+        newOrder.setOrderDate(LocalDate.now());
+        newOrder.setProducts(listOfProducts);
+        newOrder.setUser(user);
+
+        orderRepository.save(newOrder);
+
+        return newOrder;
     }
 
 
-    // Functie voor PutMapping.
+
+    // Functie voor PatchMapping.
     public OrderOutputDto updateOrder(Long id, OrderInputDto orderInputDto) {
 
         Optional<Order> optionalOrder = orderRepository.findById(id);
@@ -112,27 +115,25 @@ public class OrderService {
 
             Order orderUpdate = optionalOrder.get();
 
-            if (orderInputDto.getOrderHeader() != null) {
-                orderUpdate.setOrderHeader(orderInputDto.getOrderHeader());
+            if (orderInputDto.getProductNames() != null) {
+                List<Product> listOfProducts = new ArrayList<>();
+                for( String productName : orderInputDto.getProductNames()){
+                    Optional<Product> optionalProduct = productRepository.findByProductName(productName);
+
+                    if(optionalProduct.isEmpty()) {
+                        throw new RecordNotFoundException("No products");
+                    }else {
+                        Product product = optionalProduct.get();
+                        listOfProducts.add(product);
+                    }
+                }
+                orderUpdate.setProducts(listOfProducts);
             }
-            if (orderInputDto.getComment() != null) {
-                orderUpdate.setComment(orderInputDto.getComment());
-            }
-            if (orderInputDto.getOrderNumber() != null) {
-                orderUpdate.setOrderNumber(orderInputDto.getOrderNumber());
-            }
-            if (orderInputDto.getOrderLine() != null) {
-                orderUpdate.setOrderLine(orderInputDto.getOrderLine());
-            }
+
             if (orderInputDto.getOrderTotal() != null) {
                 orderUpdate.setOrderTotal(orderInputDto.getOrderTotal());
             }
-            if (orderInputDto.getOrderPayment() != null) {
-                orderUpdate.setOrderPayment(orderInputDto.getOrderPayment());
-            }
-            if (orderInputDto.getOrderTaxDetail() != null) {
-                orderUpdate.setOrderTaxDetail(orderInputDto.getOrderTaxDetail());
-            }
+
             Order updatedOrder = orderRepository.save(orderUpdate);
             return transferOrderToOutputDto(updatedOrder);
         } else {
@@ -140,4 +141,31 @@ public class OrderService {
 
         }
     }
+
+
+    // Wrapper functie
+    public Order transferInputDtoToOrder(OrderInputDto orderInputDto) {
+
+        Order newOrder = new Order();
+
+        newOrder.setOrderTotal(orderInputDto.getOrderTotal());
+        newOrder.setPickUpDate(orderInputDto.getPickUpDate());
+        newOrder.setTimeFrame(orderInputDto.getTimeFrame());
+
+
+        return newOrder;
+    }
+
+    // Wrapper Functie
+    public OrderOutputDto transferOrderToOutputDto(Order order) {
+
+        OrderOutputDto orderOutputDto = new OrderOutputDto();
+        orderOutputDto.setProductNames(order.getProducts());
+        orderOutputDto.setPickUpDate(order.getPickUpDate());
+        orderOutputDto.setTimeFrame(order.getTimeFrame());
+
+        return orderOutputDto;
+    }
+
+
 }

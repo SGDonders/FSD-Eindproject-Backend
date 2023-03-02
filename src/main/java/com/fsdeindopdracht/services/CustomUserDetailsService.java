@@ -21,13 +21,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userService = userService;
     }
 
-//    @Autowired
-//    private AuthorityService authorityService;
-
     @Override
     public UserDetails loadUserByUsername(String username) {
         RegisterDto userDto = userService.getUser(username);
-
 
         String password = userDto.getPassword();
 
@@ -36,7 +32,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         for (Authority authority : authorities) {
             grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()));
         }
-
         return new org.springframework.security.core.userdetails.User(username, password, grantedAuthorities);
     }
 }

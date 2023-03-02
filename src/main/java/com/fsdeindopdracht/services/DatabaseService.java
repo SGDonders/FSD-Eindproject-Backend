@@ -1,8 +1,11 @@
 package com.fsdeindopdracht.services;
 
+import com.fsdeindopdracht.execeptions.ProductNotFoundException;
 import com.fsdeindopdracht.models.FileUploadResponse;
 import com.fsdeindopdracht.models.FileDocument;
+import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.repositories.DocFileRepository;
+import com.fsdeindopdracht.repositories.ProductRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -25,43 +28,59 @@ import java.util.zip.ZipOutputStream;
 public class DatabaseService {
     private final DocFileRepository doc;
 
-    public DatabaseService(DocFileRepository doc){
+    private final ProductRepository productRepository;
+
+    public DatabaseService(DocFileRepository doc, ProductRepository productRepository){
         this.doc = doc;
+        this.productRepository = productRepository;
     }
 
+
+    // Function for getMapping all files.
     public Collection<FileDocument> getALlFromDB() {
         return doc.findAll();
     }
 
-    public FileDocument uploadFileDocument(MultipartFile file) throws IOException {
+
+
+
+    // Function for postMapping a file.
+    public FileDocument uploadFileDocument(MultipartFile file, String productName) throws IOException {
+        Product product = productRepository.findByProductName(productName)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with name " + productName));
+
         String name = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         FileDocument fileDocument = new FileDocument();
         fileDocument.setFileName(name);
         fileDocument.setDocFile(file.getBytes());
+        fileDocument.setProduct(product);
 
         doc.save(fileDocument);
 
         return fileDocument;
-
     }
 
+
+
+
+
+    // Function for getMapping one file.
     public ResponseEntity<byte[]> singleFileDownload(String fileName, HttpServletRequest request){
 
         FileDocument document = doc.findByFileName(fileName);
 
-//        this mediaType decides witch type you accept if you only accept 1 type
-//        MediaType contentType = MediaType.IMAGE_JPEG;
-//        this is going to accept multiple types
-
+    //    this mediaType decides witch type you accept if you only accept 1 type
+    //    MediaType contentType = MediaType.IMAGE_JPEG;
+    //    this is going to accept multiple types
         String mimeType = request.getServletContext().getMimeType(document.getFileName());
 
-//        for download attachment use next line
-//        return ResponseEntity.ok().contentType(contentType).header(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=" + resource.getFilename()).body(resource);
-//        for showing image in browser
+    //    for download attachment use next line
+    //    return ResponseEntity.ok().contentType(contentType).header(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=" + resource.getFilename()).body(resource);
+    //    for showing image in browser
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName=" + document.getFileName()).body(document.getDocFile());
-
     }
 
+    // Function for postMapping multiple files.
     public List<FileUploadResponse> createMultipleUpload(MultipartFile[] files){
         List<FileUploadResponse> uploadResponseList = new ArrayList<>();
         Arrays.stream(files).forEach(file -> {
@@ -74,10 +93,9 @@ public class DatabaseService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             doc.save(fileDocument);
 
-//            next line makes url. example "http://localhost:8080/download/naam.jpg"
+    //     next line makes url. example "http://localhost:8080/download/naam.jpg"
             String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFromDB/").path(name).toUriString();
 
             String contentType = file.getContentType();
@@ -89,6 +107,7 @@ public class DatabaseService {
         return uploadResponseList;
     }
 
+    //
     public void getZipDownload(String[] files, HttpServletResponse response) throws IOException {
         try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
             Arrays.stream(files).forEach(file -> {

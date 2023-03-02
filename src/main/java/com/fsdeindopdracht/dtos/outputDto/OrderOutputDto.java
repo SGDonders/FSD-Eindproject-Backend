@@ -1,19 +1,29 @@
 package com.fsdeindopdracht.dtos.outputDto;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fsdeindopdracht.models.Order;
+import com.fsdeindopdracht.models.Product;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
 
 public class OrderOutputDto {
-    public Long id;
-    public String orderHeader;
-    public String comment;
-    public String orderNumber;
-    public String orderLine;
-    public String orderTotal;
-    public String orderPayment;
-    public String OrderTaxDetail;
+    private Long id;
+
+    private String userName;
+
+    private Double orderTotal;
+
+    private LocalDate orderDate;
+
+    private String pickUpDate;
+
+    private Boolean timeFrame;
+
+    private List<Product> productNames;
 }

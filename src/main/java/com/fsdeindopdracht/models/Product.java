@@ -1,7 +1,9 @@
 package com.fsdeindopdracht.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,13 +14,22 @@ import javax.persistence.*;
 @Entity
 @Table(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    public Long id;
+    private Long id;
 
-    public String productName;
-    public Double price;
-    public Double availableStock;
-    public String category;
+    @Column(unique = true, nullable = false)
+    private String productName;
+
+    private Double price;
+    private Double availableStock;
+    private String category;
+
+    @ManyToMany(mappedBy = "products")
+    @JsonIgnore
+    private List<Order> orders;
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private FileDocument fileDocument;
 }
