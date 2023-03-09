@@ -133,7 +133,7 @@ public class UserService {
 
         dto.username = user.getUsername();
         dto.password = user.getPassword();
-        dto.authorities = user.getAuthorities();
+        dto.setAuthorities(user.getAuthorities());
         if(dto.getAccount()== null) {
             dto.setAccount(user.getAccount());
         }

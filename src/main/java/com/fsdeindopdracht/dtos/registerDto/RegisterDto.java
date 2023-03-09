@@ -22,7 +22,7 @@ public class RegisterDto {
     public String username;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Size(min = 5, message = "Password must be at least 5 characters long")
     public String password;
 
     @NotBlank(message = "First name is required")

@@ -67,14 +67,4 @@ public class AccountController {
     public ResponseEntity<AccountOutputDto> updateProfile(@PathVariable String id, @RequestBody AccountInputDto accountInputDto) {
         return ResponseEntity.ok(accountService.updateProfile(id, accountInputDto));
     }
-
-    // DeleteMapping request account.
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAccount(@PathVariable String id) {
-        accountService.deleteAccount(id); //
-        return ResponseEntity.noContent().build();
-    }
-
-
-
 }
