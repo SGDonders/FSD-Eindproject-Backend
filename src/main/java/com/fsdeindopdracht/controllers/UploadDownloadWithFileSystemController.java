@@ -1,12 +1,11 @@
 package com.fsdeindopdracht.controllers;
 
-
 import com.fsdeindopdracht.models.FileUploadResponse;
 import com.fsdeindopdracht.services.DatabaseService;
 import com.fsdeindopdracht.services.FileStorageService;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.zip.ZipOutputStream;
 
 @CrossOrigin
 @RestController
@@ -32,19 +26,7 @@ public class UploadDownloadWithFileSystemController {
         this.databaseService = databaseService;
     }
 
-    // PostMapping picture
-    @PostMapping("/single/upload")
-    public FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file){
-
-        String fileName = fileStorageService.storeFile(file);
-        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(fileName).toUriString();
-        String contentType = file.getContentType();
-
-        return new FileUploadResponse(fileName, contentType, url );
-    }
-
-
-    // GetMapping picture
+    // GetMapping request for downloading a picture from filesystem (File can be found in resource/upload file.)
     @GetMapping("/download/{fileName}")
     ResponseEntity<Resource> downLoadSingleFile(@PathVariable String fileName, HttpServletRequest request) {
 
@@ -59,6 +41,19 @@ public class UploadDownloadWithFileSystemController {
         }
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName=" + resource.getFilename()).body(resource);
     }
+
+
+    // PostMapping request for uploading a picture in to filesystem. (File is stored into resource/upload file.)
+    @PostMapping("/single/upload")
+    public FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file){
+
+        String fileName = fileStorageService.storeFile(file);
+        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(fileName).toUriString();
+        String contentType = file.getContentType();
+
+        return new FileUploadResponse(fileName, contentType, url );
+    }
+
 
 
 }

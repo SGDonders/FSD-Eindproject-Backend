@@ -5,6 +5,7 @@ import com.fsdeindopdracht.dtos.outputDto.SpecialOfferOutputDto;
 import com.fsdeindopdracht.models.SpecialOffer;
 import com.fsdeindopdracht.services.SpecialOfferService;
 import com.fsdeindopdracht.utils.Utils;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -26,26 +27,21 @@ public class SpecialOfferController {
     }
 
 
-    // GetMapping request alle specialoffer.
-    @GetMapping("")
-    public ResponseEntity<List<SpecialOfferOutputDto>> getAllAccounts() {
-        return ResponseEntity.ok(specialOfferService.getAllSpecialOffers());
-    }
-
-    // GetMapping request voor één specialoffer.
+    // GetMapping request for a specialoffer.
     @GetMapping("{id}")
     public ResponseEntity<SpecialOfferOutputDto> getSpecialOffer(@PathVariable Long id) {
         return ResponseEntity.ok(specialOfferService.getSpecialOffer(id));
     }
 
-    // DeleteMapping request voor een specialOffer
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSpecialOffer(@PathVariable Long id) {
-        specialOfferService.deleteSpecialOffer(id); //
-        return ResponseEntity.noContent().build();
+
+    // GetMapping request all specialoffers.
+    @GetMapping("")
+    public ResponseEntity<List<SpecialOfferOutputDto>> getAllAccounts() {
+        return ResponseEntity.ok(specialOfferService.getAllSpecialOffers());
     }
 
-    // PostMapping request voor een specialOffer
+
+    // PostMapping request for a specialOffer
     @PostMapping("")
     public ResponseEntity<Object> createSpecialOffer(@Valid @RequestBody SpecialOfferInputDto specialOfferInputDto,
                                                  BindingResult bindingResult) throws ValidationException {
@@ -58,10 +54,20 @@ public class SpecialOfferController {
         return ResponseEntity.created(uri).body(savedSpecialOffer);
     }
 
-    // PutMapping request voor een specialOffer
+
+    // PutMapping request for a specialOffer
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateAccount(@PathVariable Long id, @RequestBody SpecialOfferInputDto specialOfferInputDto) {
         SpecialOfferOutputDto specialOfferOutputDto = specialOfferService.updateSpecialOffer(id, specialOfferInputDto);
         return ResponseEntity.ok().body(specialOfferOutputDto);
     }
+
+
+    // DeleteMapping request for a specialOffer
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteSpecialOffer(@PathVariable Long id) {
+        specialOfferService.deleteSpecialOffer(id); //
+        return ResponseEntity.noContent().build();
+    }
+
 }

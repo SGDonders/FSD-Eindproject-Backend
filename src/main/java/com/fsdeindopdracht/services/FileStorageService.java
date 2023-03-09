@@ -13,9 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class FileStorageService {
@@ -24,6 +21,8 @@ public class FileStorageService {
     private Path fileStoragePath;
     private final String fileStorageLocation;
 
+
+    // Function for creating a file directory.
     public FileStorageService(@Value("${my.upload_location}") String fileStorageLocation) {
         fileStoragePath = Paths.get(fileStorageLocation).toAbsolutePath().normalize();
 
@@ -37,7 +36,8 @@ public class FileStorageService {
 
     }
 
-    // Functie voor post request file.
+
+    // Function for storing a file into filesystem.
     public String storeFile(MultipartFile file) {
 
         String fileName = "UploadFarmerPicture.jpg";
@@ -53,6 +53,8 @@ public class FileStorageService {
         return fileName;
     }
 
+
+    // Function for downloading a file from filesystem.
     public Resource downLoadFile(String fileName) {
 
         Path path = Paths.get(fileStorageLocation).toAbsolutePath().resolve(fileName);
@@ -71,21 +73,4 @@ public class FileStorageService {
             throw new RuntimeException("the file doesn't exist or not readable");
         }
     }
-
-    public List<String> downLoad() {
-        // Directory path here
-        var list = new ArrayList<String>();
-        File folder = new File(fileStorageLocation);
-        File[] listOfFiles = folder.listFiles();
-
-        for(int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++){
-            if(listOfFiles[i].isFile()){
-                String name = listOfFiles[i].getName();
-                list.add(name);
-            }
-        }
-        return list;
-    }
-
-
 }

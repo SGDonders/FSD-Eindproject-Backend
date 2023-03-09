@@ -6,6 +6,7 @@ import com.fsdeindopdracht.dtos.registerDto.RegisterDto;
 import com.fsdeindopdracht.services.AccountService;
 import com.fsdeindopdracht.services.UserService;
 import com.fsdeindopdracht.utils.Utils;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,18 +39,13 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
+
     // GetMapping request account.
     @GetMapping("{id}")
     public ResponseEntity<AccountOutputDto> getAccount(@PathVariable String id) {
         return ResponseEntity.ok(accountService.getAccount(id));
     }
 
-    // DeleteMapping request account.
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAccount(@PathVariable String id) {
-        accountService.deleteAccount(id); //
-        return ResponseEntity.noContent().build();
-    }
 
     // PostMapping request account.
     @PostMapping("")
@@ -65,10 +61,20 @@ public class AccountController {
         return ResponseEntity.created(uri).body(savedAccount);
     }
 
+
     // PutMapping request account.
     @PutMapping("/{id}")
     public ResponseEntity<AccountOutputDto> updateProfile(@PathVariable String id, @RequestBody AccountInputDto accountInputDto) {
         return ResponseEntity.ok(accountService.updateProfile(id, accountInputDto));
     }
+
+    // DeleteMapping request account.
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAccount(@PathVariable String id) {
+        accountService.deleteAccount(id); //
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }

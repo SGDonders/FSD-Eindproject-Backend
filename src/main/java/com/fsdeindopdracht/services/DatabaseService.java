@@ -1,28 +1,24 @@
 package com.fsdeindopdracht.services;
 
 import com.fsdeindopdracht.execeptions.ProductNotFoundException;
-import com.fsdeindopdracht.models.FileUploadResponse;
 import com.fsdeindopdracht.models.Image;
 import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.repositories.DocFileRepository;
 import com.fsdeindopdracht.repositories.ProductRepository;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Service
 public class DatabaseService {
@@ -34,14 +30,6 @@ public class DatabaseService {
         this.doc = doc;
         this.productRepository = productRepository;
     }
-
-
-    // Function for getMapping all files.
-    public Collection<Image> getALlFromDB() {
-        return doc.findAll();
-    }
-
-
 
 
     // Function for postMapping a file.
@@ -61,7 +49,10 @@ public class DatabaseService {
     }
 
 
-
+    // Function for getMapping all files.
+    public Collection<Image> getALlFromDB() {
+        return doc.findAll();
+    }
 
 
     // Function for getMapping one file.
@@ -80,50 +71,6 @@ public class DatabaseService {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName=" + document.getFileName()).body(document.getDocFile());
     }
 
-    // Function for postMapping multiple files.
-    public List<FileUploadResponse> createMultipleUpload(MultipartFile[] files){
-        List<FileUploadResponse> uploadResponseList = new ArrayList<>();
-        Arrays.stream(files).forEach(file -> {
-
-            String name = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-            Image image = new Image();
-            image.setFileName(name);
-            try {
-                image.setDocFile(file.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            doc.save(image);
-
-    //     next line makes url. example "http://localhost:8080/download/naam.jpg"
-            String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFromDB/").path(name).toUriString();
-
-            String contentType = file.getContentType();
-
-            FileUploadResponse response = new FileUploadResponse(name, contentType, url);
-
-            uploadResponseList.add(response);
-        });
-        return uploadResponseList;
-    }
-
-    //
-    public void getZipDownload(String[] files, HttpServletResponse response) throws IOException {
-        try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
-            Arrays.stream(files).forEach(file -> {
-                try {
-                    createZipEntry(file, zos);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            zos.finish();
-
-            response.setStatus(200);
-            response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=zipfile");
-        }
-    }
 
     public Resource downLoadFileDatabase(String fileName) {
 
@@ -144,20 +91,4 @@ public class DatabaseService {
         }
     }
 
-    public void createZipEntry(String file, ZipOutputStream zos) throws IOException {
-
-        Resource resource = downLoadFileDatabase(file);
-        ZipEntry zipEntry = new ZipEntry(Objects.requireNonNull(resource.getFilename()));
-        try {
-            zipEntry.setSize(resource.contentLength());
-            zos.putNextEntry(zipEntry);
-
-            StreamUtils.copy(resource.getInputStream(), zos);
-
-            zos.closeEntry();
-        } catch (IOException e) {
-            System.out.println("some exception while zipping");
-        }
-
-    }
 }

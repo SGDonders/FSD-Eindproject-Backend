@@ -16,4 +16,5 @@ public class ProductOutputDto {
     public String category;
 
     public Image image;
+
 }
