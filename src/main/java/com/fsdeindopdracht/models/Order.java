@@ -17,7 +17,6 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Double orderTotal;
     private LocalDate orderDate;
     private String pickUpDate;

@@ -51,7 +51,7 @@ public class OrderController {
     public ResponseEntity<Object> createOrder(@Valid @RequestBody OrderInputDto orderInputDto,
                                               BindingResult bindingResult) throws ValidationException {
         Utils.reportErrors(bindingResult);
-        Order savedOrder = orderService.createOrder(orderInputDto);
+        OrderOutputDto savedOrder = orderService.createOrder(orderInputDto);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/Order/" + savedOrder.getId()).toUriString());
 
         return ResponseEntity.created(uri).body(savedOrder);

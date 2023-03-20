@@ -19,7 +19,7 @@ public class RegisterDto {
 
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 15, message = "Username must be between 3 and 15 characters long")
-    public String username;
+    public String userName;
 
     @NotBlank(message = "Password is required")
     @Size(min = 5, message = "Password must be at least 5 characters long")

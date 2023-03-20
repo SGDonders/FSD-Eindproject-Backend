@@ -69,7 +69,7 @@ public class SpecialOfferService {
             SpecialOffer specialOfferUpdate = optionalSpecialOffer.get();
 
             if (specialOfferInputDto.getName() != null) {
-                specialOfferUpdate.setName(specialOfferInputDto.getName());
+                specialOfferUpdate.setProductName(specialOfferInputDto.getName());
             }
             if (specialOfferInputDto.getDescription() != null) {
                 specialOfferUpdate.setDescription(specialOfferInputDto.getDescription());
@@ -116,7 +116,7 @@ public class SpecialOfferService {
 
         SpecialOffer newSpecialOffer = new SpecialOffer();
 
-        newSpecialOffer.setName(specialOfferInputDto.getName());
+        newSpecialOffer.setProductName(specialOfferInputDto.getName());
         newSpecialOffer.setDescription(specialOfferInputDto.getDescription());
         newSpecialOffer.setStartDate(specialOfferInputDto.getStartDate());
         newSpecialOffer.setEndDate(specialOfferInputDto.getEndDate());
@@ -132,7 +132,7 @@ public class SpecialOfferService {
 
         SpecialOfferOutputDto specialOfferOutputDto = new SpecialOfferOutputDto();
 
-        specialOfferOutputDto.setName(specialOffer.getName());
+        specialOfferOutputDto.setName(specialOffer.getProductName());
         specialOfferOutputDto.setDescription(specialOffer.getDescription());
         specialOfferOutputDto.setStartDate(specialOffer.getStartDate());
         specialOfferOutputDto.setEndDate(specialOffer.getEndDate());

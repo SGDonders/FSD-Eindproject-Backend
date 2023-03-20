@@ -131,7 +131,7 @@ public class UserService {
 
         var dto = new RegisterDto();
 
-        dto.username = user.getUsername();
+        dto.userName = user.getUsername();
         dto.password = user.getPassword();
         dto.setAuthorities(user.getAuthorities());
         if(dto.getAccount()== null) {
@@ -146,7 +146,7 @@ public class UserService {
 
         var user = new User();
 
-        user.setUsername(userDto.getUsername());
+        user.setUsername(userDto.getUserName());
         user.setPassword(userDto.getPassword());
         if(userDto.getAccount()!=null) {
             user.setAccount(userDto.getAccount());

@@ -69,12 +69,12 @@ public class AccountService {
 
         User newUser = new User();
 
-        newUser.setUsername(registerDto.getUsername());
+        newUser.setUsername(registerDto.getUserName());
         newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
         Account newAccount = new Account();
 
-        newAccount.setUserName(registerDto.getUsername());
+        newAccount.setUserName(registerDto.getUserName());
         newAccount.setFirstName(registerDto.getFirstName());
         newAccount.setLastName(registerDto.getLastName());
         newAccount.setZipCode(registerDto.getZipCode());

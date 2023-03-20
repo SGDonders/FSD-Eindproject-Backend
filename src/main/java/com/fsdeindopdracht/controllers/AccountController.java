@@ -57,7 +57,7 @@ public class AccountController {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath
                 ().path("/accounts/" + savedAccount).toUriString());
 
-        userService.addAuthority(registerDto.getUsername(),"ROLE_USER");
+        userService.addAuthority(registerDto.getUserName(),"ROLE_USER");
         return ResponseEntity.created(uri).body(savedAccount);
     }
 

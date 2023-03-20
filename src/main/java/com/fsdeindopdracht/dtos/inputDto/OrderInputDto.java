@@ -5,14 +5,15 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Id;
 import javax.validation.constraints.*;
 
 @Getter
 @Setter
 
 public class OrderInputDto {
-
-
+    @Id
+    private Long id;
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters long")
     private String userName;
@@ -21,7 +22,6 @@ public class OrderInputDto {
     @DecimalMin(value = "0.0", message = "Order total must be a positive number")
     private Double orderTotal;
 
-    @NotNull(message = "Order date is required")
     private LocalDate orderDate;
 
     @NotBlank(message = "Pickup date is required")

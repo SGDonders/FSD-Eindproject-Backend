@@ -3,6 +3,7 @@ package com.fsdeindopdracht.services;
 import com.fsdeindopdracht.dtos.inputDto.OrderInputDto;
 import com.fsdeindopdracht.dtos.outputDto.OrderOutputDto;
 import com.fsdeindopdracht.execeptions.RecordNotFoundException;
+import com.fsdeindopdracht.execeptions.UsernameNotFoundException;
 import com.fsdeindopdracht.models.Order;
 import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.models.User;
@@ -63,13 +64,13 @@ public class OrderService {
 
 
     // Function for postMapping order.
-    public Order createOrder(OrderInputDto orderInputDto) {
+    public OrderOutputDto createOrder(OrderInputDto orderInputDto) {
 
         User user;
 
         Optional<User> optionalUser = userRepository.findById(orderInputDto.getUserName());
         if (optionalUser.isEmpty()) {
-            throw new RecordNotFoundException("User already removed or doesn't exist!");
+            throw new UsernameNotFoundException("User already removed or doesn't exist!");
         } else {
             user = optionalUser.get();
         }
@@ -90,10 +91,11 @@ public class OrderService {
         newOrder.setOrderDate(LocalDate.now());
         newOrder.setProducts(listOfProducts);
         newOrder.setUser(user);
+        Order savedOrder = orderRepository.save(newOrder);
 
-        orderRepository.save(newOrder);
 
-        return newOrder;
+
+        return transferOrderToOutputDto(savedOrder);
     }
 
 
@@ -162,6 +164,10 @@ public class OrderService {
     public OrderOutputDto transferOrderToOutputDto(Order order) {
 
         OrderOutputDto orderOutputDto = new OrderOutputDto();
+        orderOutputDto.setId(order.getId());
+        orderOutputDto.setUserName(order.getUser().getUsername());
+        orderOutputDto.setOrderTotal(order.getOrderTotal());
+        orderOutputDto.setOrderDate(order.getOrderDate());
         orderOutputDto.setProductNames(order.getProducts());
         orderOutputDto.setPickUpDate(order.getPickUpDate());
         orderOutputDto.setTimeFrame(order.getTimeFrame());
