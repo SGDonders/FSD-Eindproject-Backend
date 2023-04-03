@@ -1,5 +1,6 @@
 package com.fsdeindopdracht.services;
 
+import com.fsdeindopdracht.execeptions.BadRequestException;
 import com.fsdeindopdracht.execeptions.ProductNotFoundException;
 import com.fsdeindopdracht.models.Image;
 import com.fsdeindopdracht.models.Product;
@@ -37,6 +38,10 @@ public class DatabaseService {
         Product product = productRepository.findByProductName(productName)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with name " + productName));
 
+        if (product.getImage() != null) {
+            throw new BadRequestException("Product already has an image assigned.");
+        }
+
         String name = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         Image image = new Image();
         image.setFileName(name);
@@ -47,6 +52,7 @@ public class DatabaseService {
 
         return image;
     }
+
 
 
     // Function for getMapping all files.

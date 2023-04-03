@@ -23,7 +23,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-
     private final UserRepository userRepository;
 
     public OrderService(OrderRepository orderRepository,
@@ -92,8 +91,6 @@ public class OrderService {
         newOrder.setProducts(listOfProducts);
         newOrder.setUser(user);
         Order savedOrder = orderRepository.save(newOrder);
-
-
 
         return transferOrderToOutputDto(savedOrder);
     }

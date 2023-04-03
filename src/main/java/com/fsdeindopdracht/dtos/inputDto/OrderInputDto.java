@@ -1,8 +1,13 @@
 package com.fsdeindopdracht.dtos.inputDto;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fsdeindopdracht.models.Product;
+import com.fsdeindopdracht.models.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Id;
@@ -10,6 +15,8 @@ import javax.validation.constraints.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class OrderInputDto {
     @Id
@@ -32,5 +39,6 @@ public class OrderInputDto {
 
     @NotEmpty(message = "Product names are required")
     private List<@NotBlank(message = "Product name is required") String> productNames;
+
 
 }

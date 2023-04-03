@@ -37,6 +37,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Order order;
 
+
+
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
     }

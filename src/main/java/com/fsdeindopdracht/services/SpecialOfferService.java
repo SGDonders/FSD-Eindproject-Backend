@@ -22,7 +22,7 @@ public class SpecialOfferService {
     }
 
 
-    // Function for getMapping a pecialOffer.
+    // Function for getMapping a specialOffer.
     public SpecialOfferOutputDto getSpecialOffer(Long id) {
         Optional<SpecialOffer> requestedSpecialOffer = specialOfferRepository.findById(id);
         if (requestedSpecialOffer.isEmpty()) {

@@ -9,8 +9,6 @@ import com.fsdeindopdracht.models.User;
 import com.fsdeindopdracht.repositories.AccountRepository;
 import com.fsdeindopdracht.repositories.UserRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +21,12 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    @Lazy
-    private PasswordEncoder passwordEncoder;
-
-    public AccountService(AccountRepository accountRepository, UserRepository userRepository) {
+    public AccountService(AccountRepository accountRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -169,22 +165,22 @@ public class AccountService {
         }
     }
 
-
-    // Mapper method inputDTo to account.
-    public Account transferInputDtoToAccount(AccountInputDto accountInputDto) {
-
-        Account newAccount = new Account();
-
-        newAccount.setUserName(accountInputDto.userName);
-        newAccount.setFirstName(accountInputDto.firstName);
-        newAccount.setLastName(accountInputDto.lastName);
-        newAccount.setAddress(accountInputDto.address);
-        newAccount.setZipCode(accountInputDto.zipCode);
-        newAccount.setPhoneNumber(accountInputDto.phoneNumber);
-        newAccount.setEmail(accountInputDto.email);
-
-        return newAccount;
-    }
+//
+//    // Mapper method inputDTo to account.
+//    public Account transferInputDtoToAccount(AccountInputDto accountInputDto) {
+//
+//        Account newAccount = new Account();
+//
+//        newAccount.setUserName(accountInputDto.userName);
+//        newAccount.setFirstName(accountInputDto.firstName);
+//        newAccount.setLastName(accountInputDto.lastName);
+//        newAccount.setAddress(accountInputDto.address);
+//        newAccount.setZipCode(accountInputDto.zipCode);
+//        newAccount.setPhoneNumber(accountInputDto.phoneNumber);
+//        newAccount.setEmail(accountInputDto.email);
+//
+//        return newAccount;
+//    }
 
 
     // Mapper method account to outputDto.

@@ -22,6 +22,8 @@ public class Order {
     private String pickUpDate;
     private Boolean timeFrame;
 
+
+
     @JsonFormat(pattern = "dd-MM-yyyy")
     public LocalDate getOrderDate() {
         return orderDate;
@@ -36,6 +38,7 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
+
     private List<Product> products;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -52,6 +55,7 @@ public class Order {
             user = null;
         }
     }
+
 
 
 }
