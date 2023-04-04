@@ -7,7 +7,6 @@ INSERT INTO users (username, password, account_user_name)VALUES ('LtSourTangie',
 
 
 INSERT INTO authorities (username, authority) VALUES ('LtSourTangie', 'ROLE_USER');
--- INSERT INTO authorities (username, authority) VALUES ('HermanDeBoer', 'ROLE_USER');
 INSERT INTO authorities (username, authority) VALUES ('HermanDeBoer', 'ROLE_ADMIN');
 
 

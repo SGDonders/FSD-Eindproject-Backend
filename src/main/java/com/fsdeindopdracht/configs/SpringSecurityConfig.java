@@ -52,9 +52,9 @@ public class SpringSecurityConfig {
                 //.antMatchers("/**").permitAll() (put all antmatchers on permitAll, you still have to use a JWT.)
 
                 //--------------------------------Endpoint fileupload------------------------------ -------//
-                .antMatchers(HttpMethod.POST, "single/upload/**").permitAll()
+                .antMatchers(HttpMethod.POST, "single/upload/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/download/{fileName}").permitAll()
-                .antMatchers(HttpMethod.POST, "single/uploadDB/**").permitAll()
+                .antMatchers(HttpMethod.POST, "single/uploadDB/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/downloadDB/{fileName}").permitAll()
 
                 //--------------------------------Endpoint orders-------------------------------------------//
@@ -71,7 +71,7 @@ public class SpringSecurityConfig {
 
                 //------------------------------Endpoint accounts-------------------------------------------//
                 .antMatchers(HttpMethod.POST, "/accounts").permitAll()
-                .antMatchers(HttpMethod.PUT, "/accounts/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/accounts/**").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.GET,"/accounts").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.POST,"/accounts/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/accounts/**").hasRole("ADMIN")
