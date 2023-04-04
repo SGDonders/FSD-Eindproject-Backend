@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fsdeindopdracht.dtos.inputDto.OrderInputDto;
-import com.fsdeindopdracht.dtos.outputDto.OrderOutputDto;
 import com.fsdeindopdracht.models.Authority;
 import com.fsdeindopdracht.models.Order;
 import com.fsdeindopdracht.models.Product;
@@ -55,10 +53,6 @@ class OrderServiceIntegrationTest {
 
     Order order1;
     Order order2;
-    OrderInputDto orderInputDto1;
-    OrderOutputDto orderOutputDto1;
-    OrderInputDto orderInputDto2;
-    OrderOutputDto orderOutputDto2;
     User user1;
     User user2;
     Product product1;
