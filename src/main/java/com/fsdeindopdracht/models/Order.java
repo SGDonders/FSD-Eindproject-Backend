@@ -17,11 +17,12 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Double orderTotal;
     private LocalDate orderDate;
     private String pickUpDate;
     private Boolean timeFrame;
+
+
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     public LocalDate getOrderDate() {
@@ -37,6 +38,7 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
+
     private List<Product> products;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -53,6 +55,7 @@ public class Order {
             user = null;
         }
     }
+
 
 
 }

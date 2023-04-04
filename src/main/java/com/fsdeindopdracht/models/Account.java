@@ -30,6 +30,13 @@ public class Account {
     private User user;
 
 
-
-
+    public Account(String userName, String firstName, String lastName, String zipCode, String address, String phoneNumber, String email) {
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.zipCode = zipCode;
+        Address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
 }

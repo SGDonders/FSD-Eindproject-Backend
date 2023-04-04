@@ -22,37 +22,18 @@ public class SpecialOfferService {
     }
 
 
-    // Wrapper functie
-    public SpecialOffer transferInputDtoToSpecialOffer(SpecialOfferInputDto specialOfferInputDto) {
-
-        SpecialOffer newSpecialOffer = new SpecialOffer();
-
-        newSpecialOffer.setName(specialOfferInputDto.getName());
-        newSpecialOffer.setDescription(specialOfferInputDto.getDescription());
-        newSpecialOffer.setStartDate(specialOfferInputDto.getStartDate());
-        newSpecialOffer.setEndDate(specialOfferInputDto.getEndDate());
-        newSpecialOffer.setDiscount(specialOfferInputDto.getDiscount());
-        newSpecialOffer.setEnabled(specialOfferInputDto.getEnabled());
-
-        return newSpecialOffer;
+    // Function for getMapping a specialOffer.
+    public SpecialOfferOutputDto getSpecialOffer(Long id) {
+        Optional<SpecialOffer> requestedSpecialOffer = specialOfferRepository.findById(id);
+        if (requestedSpecialOffer.isEmpty()) {
+            throw new RecordNotFoundException("Record not found!");
+        } else {
+            return transferSpecialOfferToOutputDto(requestedSpecialOffer.get());
+        }
     }
 
-    // Wrapper Functie
-    public SpecialOfferOutputDto transferSpecialOfferToOutputDto(SpecialOffer specialOffer) {
 
-        SpecialOfferOutputDto specialOfferOutputDto = new SpecialOfferOutputDto();
-
-        specialOfferOutputDto.setName(specialOffer.getName());
-        specialOfferOutputDto.setDescription(specialOffer.getDescription());
-        specialOfferOutputDto.setStartDate(specialOffer.getStartDate());
-        specialOfferOutputDto.setEndDate(specialOffer.getEndDate());
-        specialOfferOutputDto.setDiscount(specialOffer.getDiscount());
-        specialOfferOutputDto.setEnabled(specialOffer.getEnabled());
-
-        return specialOfferOutputDto;
-    }
-
-    // Functie voor GetMapping van alle SpecialOffers.
+    // Function for getMapping all specialOffers.
     public List<SpecialOfferOutputDto> getAllSpecialOffers() {
         List<SpecialOffer> optionalSpecialOffer = specialOfferRepository.findAll();
         List<SpecialOfferOutputDto> SpecialOfferOutputDtoList = new ArrayList<>();
@@ -70,38 +51,15 @@ public class SpecialOfferService {
         return SpecialOfferOutputDtoList;
     }
 
-    // Functie voor getMapping één SpecialOffer.
-    public SpecialOfferOutputDto getSpecialOffer(Long id) {
-        Optional<SpecialOffer> requestedSpecialOffer = specialOfferRepository.findById(id);
-        if (requestedSpecialOffer.isEmpty()) {
-            throw new RecordNotFoundException("Record not found!");
-        } else {
-            return transferSpecialOfferToOutputDto(requestedSpecialOffer.get());
-        }
-    }
 
-    // Functie voor deleteMapping.
-    public void deleteSpecialOffer(Long id) {
-        Optional<SpecialOffer> optionalSpecialOffer = specialOfferRepository.findById(id);
-        // optional tv.
-        if (optionalSpecialOffer.isEmpty()) {
-            throw new RecordNotFoundException("Television already removed or doesn't exist!");
-            // throw exception.
-        } else {
-            SpecialOffer SpecialOfferObj = optionalSpecialOffer.get();
-            // er een tv van.
-            specialOfferRepository.delete(SpecialOfferObj);
-        }
-    }
-
-    // Functie voor PostMapping
+    // Function for PostMapping.
     public SpecialOffer createSpecialOffer(SpecialOfferInputDto specialOfferInputDto) {
         SpecialOffer newSpecialOffer = transferInputDtoToSpecialOffer(specialOfferInputDto);
         return specialOfferRepository.save(newSpecialOffer);
     }
 
 
-    // Functie voor PatchMapping.
+    // Function for patchMapping.
     public SpecialOfferOutputDto updateSpecialOffer(Long id, SpecialOfferInputDto specialOfferInputDto) {
 
         Optional<SpecialOffer> optionalSpecialOffer = specialOfferRepository.findById(id);
@@ -111,7 +69,7 @@ public class SpecialOfferService {
             SpecialOffer specialOfferUpdate = optionalSpecialOffer.get();
 
             if (specialOfferInputDto.getName() != null) {
-                specialOfferUpdate.setName(specialOfferInputDto.getName());
+                specialOfferUpdate.setProductName(specialOfferInputDto.getName());
             }
             if (specialOfferInputDto.getDescription() != null) {
                 specialOfferUpdate.setDescription(specialOfferInputDto.getDescription());
@@ -135,5 +93,52 @@ public class SpecialOfferService {
             throw new RecordNotFoundException("SpecialOffer not found!");
 
         }
+    }
+
+
+    // Function for deleteMapping.
+    public void deleteSpecialOffer(Long id) {
+        Optional<SpecialOffer> optionalSpecialOffer = specialOfferRepository.findById(id);
+        // optional tv.
+        if (optionalSpecialOffer.isEmpty()) {
+            throw new RecordNotFoundException("Television already removed or doesn't exist!");
+            // throw exception.
+        } else {
+            SpecialOffer SpecialOfferObj = optionalSpecialOffer.get();
+            // er een tv van.
+            specialOfferRepository.delete(SpecialOfferObj);
+        }
+    }
+
+
+    // Mapper method inputDto to specialOffer.
+    public SpecialOffer transferInputDtoToSpecialOffer(SpecialOfferInputDto specialOfferInputDto) {
+
+        SpecialOffer newSpecialOffer = new SpecialOffer();
+
+        newSpecialOffer.setProductName(specialOfferInputDto.getName());
+        newSpecialOffer.setDescription(specialOfferInputDto.getDescription());
+        newSpecialOffer.setStartDate(specialOfferInputDto.getStartDate());
+        newSpecialOffer.setEndDate(specialOfferInputDto.getEndDate());
+        newSpecialOffer.setDiscount(specialOfferInputDto.getDiscount());
+        newSpecialOffer.setEnabled(specialOfferInputDto.getEnabled());
+
+        return newSpecialOffer;
+    }
+
+
+    // Mapper method specialOffer to outputDto.
+    public SpecialOfferOutputDto transferSpecialOfferToOutputDto(SpecialOffer specialOffer) {
+
+        SpecialOfferOutputDto specialOfferOutputDto = new SpecialOfferOutputDto();
+
+        specialOfferOutputDto.setName(specialOffer.getProductName());
+        specialOfferOutputDto.setDescription(specialOffer.getDescription());
+        specialOfferOutputDto.setStartDate(specialOffer.getStartDate());
+        specialOfferOutputDto.setEndDate(specialOffer.getEndDate());
+        specialOfferOutputDto.setDiscount(specialOffer.getDiscount());
+        specialOfferOutputDto.setEnabled(specialOffer.getEnabled());
+
+        return specialOfferOutputDto;
     }
 }

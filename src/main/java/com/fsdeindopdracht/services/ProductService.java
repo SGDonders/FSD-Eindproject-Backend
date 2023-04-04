@@ -1,16 +1,13 @@
 package com.fsdeindopdracht.services;
 
-
 import com.fsdeindopdracht.dtos.inputDto.ProductInputDto;
 import com.fsdeindopdracht.dtos.outputDto.ProductOutputDto;
 import com.fsdeindopdracht.execeptions.RecordNotFoundException;
-import com.fsdeindopdracht.models.FileDocument;
 import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.repositories.ProductRepository;
 
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +22,18 @@ public class ProductService {
     }
 
 
-    // Functie voor GetMapping van alle Products.
+    // Function for getMapping a product.
+    public ProductOutputDto getProduct(String id) {
+        Optional<Product> requestedProduct = productRepository.findByProductName(id);
+        if (requestedProduct.isEmpty()) {
+            throw new RecordNotFoundException("Product not found!");
+        } else {
+            return transferProductToOutputDto(requestedProduct.get());
+        }
+    }
+
+
+    // Function for getMapping all products.
     public List<ProductOutputDto> getAllProducts() {
         List<Product> optionalProducts = productRepository.findAll();
         List<ProductOutputDto> ProductOutputDtoList = new ArrayList<>();
@@ -37,38 +45,13 @@ public class ProductService {
                 ProductOutputDto productOutputDto = transferProductToOutputDto(product);
 
                 ProductOutputDtoList.add(productOutputDto);
-
             }
         }
         return ProductOutputDtoList;
     }
 
 
-    // Functie voor getMapping één Product.
-    public ProductOutputDto getProduct(String id) {
-        Optional<Product> requestedProduct = productRepository.findByProductName(id);
-        if (requestedProduct.isEmpty()) {
-            throw new RecordNotFoundException("Product not found!");
-        } else {
-            return transferProductToOutputDto(requestedProduct.get());
-        }
-    }
-
-    // Functie voor deleteMapping.
-    public void deleteProduct(String id) {
-        Optional<Product> optionalProduct = productRepository.findByProductName(id);
-
-        if (optionalProduct.isEmpty()) {
-            throw new RecordNotFoundException("Product already removed or doesn't exist!");
-
-        } else {
-            Product ProductObj = optionalProduct.get();
-
-            productRepository.delete(ProductObj);
-        }
-    }
-
-    // Functie voor PostMapping
+    // Function for postMapping a product.
     public Product createProduct(ProductInputDto productInputDto) {
 
 
@@ -79,13 +62,11 @@ public class ProductService {
         } else {
             newProduct.setId(maxId + 1);
         }
-
         return productRepository.save(newProduct);
     }
 
 
-
-    // Functie voor PatchMapping.
+    // Function for patchMapping a product.
     public ProductOutputDto updateProduct(String id, ProductInputDto productInputDto) {
 
         Optional<Product> optionalProduct = productRepository.findByProductName(id);
@@ -110,20 +91,34 @@ public class ProductService {
             return transferProductToOutputDto(updatedProduct);
         } else {
             throw new RecordNotFoundException("Product not found!");
-
         }
     }
 
 
-    // koppelfunctie voor product en image
-    public void saveProductWithImage(Product product, FileDocument fileDocument) {
-        product.setFileDocument(fileDocument);
-        fileDocument.setProduct(product);
-        productRepository.save(product);
+    // Function for deleteMapping a product.
+    public void deleteProduct(String id) {
+        Optional<Product> optionalProduct = productRepository.findByProductName(id);
+
+        if (optionalProduct.isEmpty()) {
+            throw new RecordNotFoundException("Product already removed or doesn't exist!");
+
+        } else {
+            Product ProductObj = optionalProduct.get();
+
+            productRepository.delete(ProductObj);
+        }
     }
 
 
-    // Wrapper functie
+//    // koppelfunctie voor product en image
+//    public void saveProductWithImage(Product product, Image image) {
+//        product.setImage(image);
+//        image.setProduct(product);
+//        productRepository.save(product);
+//    }
+
+
+    // Mapper method inputDto to product.
     public Product transferInputDtoToProduct(ProductInputDto productInputDto) {
 
         Product newProduct = new Product();
@@ -132,12 +127,13 @@ public class ProductService {
         newProduct.setPrice(productInputDto.getPrice());
         newProduct.setAvailableStock(productInputDto.getAvailableStock());
         newProduct.setCategory(productInputDto.getCategory());
-        newProduct.setFileDocument(productInputDto.getFileDocument());
+        newProduct.setImage(productInputDto.getImage());
 
         return newProduct;
     }
 
-    // Wrapper Functie
+
+    // Mapper method product to outputDto.
     public ProductOutputDto transferProductToOutputDto(Product product) {
 
         ProductOutputDto productOutputDto = new ProductOutputDto();
@@ -147,11 +143,10 @@ public class ProductService {
         productOutputDto.setPrice(product.getPrice());
         productOutputDto.setAvailableStock(product.getAvailableStock());
         productOutputDto.setCategory(product.getCategory());
-        productOutputDto.setFileDocument(product.getFileDocument());
+        productOutputDto.setImage(product.getImage());
 
         return productOutputDto;
     }
-
 }
 
 

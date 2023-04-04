@@ -17,12 +17,11 @@ public class SpecialOffer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
-
-    public String name;
-    public String description;
-    public LocalDate startDate;
-    public LocalDate endDate;
-    public Double discount;
-    public Boolean enabled;
+    private Long id;
+    private String productName;
+    private String description;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Double discount;
+    private Boolean enabled;
 }

@@ -5,6 +5,7 @@ import com.fsdeindopdracht.payload.AuthenticationRequest;
 import com.fsdeindopdracht.payload.AuthenticationResponse;
 import com.fsdeindopdracht.services.CustomUserDetailsService;
 import com.fsdeindopdracht.utils.JwtUtil;
+
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,11 +33,15 @@ public class AuthenticationController {
         this.jwtUtl = jwtUtl;
     }
 
+
+    // GetMapping request for authenticated.
     @GetMapping(value = "/authenticated")
     public ResponseEntity<Object> authenticated(Authentication authentication, Principal principal) {
         return ResponseEntity.ok().body(principal);
     }
 
+
+    // PostMapping request for authenticated.
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 

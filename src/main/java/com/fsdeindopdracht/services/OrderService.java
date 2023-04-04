@@ -3,12 +3,14 @@ package com.fsdeindopdracht.services;
 import com.fsdeindopdracht.dtos.inputDto.OrderInputDto;
 import com.fsdeindopdracht.dtos.outputDto.OrderOutputDto;
 import com.fsdeindopdracht.execeptions.RecordNotFoundException;
+import com.fsdeindopdracht.execeptions.UsernameNotFoundException;
 import com.fsdeindopdracht.models.Order;
 import com.fsdeindopdracht.models.Product;
 import com.fsdeindopdracht.models.User;
 import com.fsdeindopdracht.repositories.OrderRepository;
 import com.fsdeindopdracht.repositories.ProductRepository;
 import com.fsdeindopdracht.repositories.UserRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,7 +23,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-
     private final UserRepository userRepository;
 
     public OrderService(OrderRepository orderRepository,
@@ -31,7 +32,19 @@ public class OrderService {
         this.userRepository = userRepository;
     }
 
-    // Functie voor GetMapping van alle Orders.
+
+    // Function for getMapping order.
+    public OrderOutputDto getOrder(Long id) {
+        Optional<Order> requestedOrder = orderRepository.findById(id);
+        if (requestedOrder.isEmpty()) {
+            throw new RecordNotFoundException("Order not found!");
+        } else {
+            return transferOrderToOutputDto(requestedOrder.get());
+        }
+    }
+
+
+    // Function for getMapping all orders.
     public List<OrderOutputDto> getAllOrders() {
         List<Order> optionalOrder = orderRepository.findAll();
         List<OrderOutputDto> orderOutputDtoList = new ArrayList<>();
@@ -43,41 +56,20 @@ public class OrderService {
                 OrderOutputDto orderOutputDto = transferOrderToOutputDto(order);
 
                 orderOutputDtoList.add(orderOutputDto);
-
             }
         }
         return orderOutputDtoList;
     }
 
-    // Functie voor getMapping één Order.
-    public OrderOutputDto getOrder(Long id) {
-        Optional<Order> requestedOrder = orderRepository.findById(id);
-        if (requestedOrder.isEmpty()) {
-            throw new RecordNotFoundException("Order not found!");
-        } else {
-            return transferOrderToOutputDto(requestedOrder.get());
-        }
-    }
 
-    // Functie voor deleteMapping.
-    public void deleteOrder(Long id) {
-        Optional<Order> optionalOrder = orderRepository.findById(id);
-        if (optionalOrder.isEmpty()) {
-            throw new RecordNotFoundException("Order already removed or doesn't exist!");
-        } else {
-            Order orderObj = optionalOrder.get();
-            orderRepository.delete(orderObj);
-        }
-    }
-
-    // Functie voor PostMapping
-    public Order createOrder(OrderInputDto orderInputDto) {
+    // Function for postMapping order.
+    public OrderOutputDto createOrder(OrderInputDto orderInputDto) {
 
         User user;
 
         Optional<User> optionalUser = userRepository.findById(orderInputDto.getUserName());
         if (optionalUser.isEmpty()) {
-            throw new RecordNotFoundException("User already removed or doesn't exist!");
+            throw new UsernameNotFoundException("User already removed or doesn't exist!");
         } else {
             user = optionalUser.get();
         }
@@ -98,15 +90,13 @@ public class OrderService {
         newOrder.setOrderDate(LocalDate.now());
         newOrder.setProducts(listOfProducts);
         newOrder.setUser(user);
+        Order savedOrder = orderRepository.save(newOrder);
 
-        orderRepository.save(newOrder);
-
-        return newOrder;
+        return transferOrderToOutputDto(savedOrder);
     }
 
 
-
-    // Functie voor PatchMapping.
+    // Function voor patchMapping order.
     public OrderOutputDto updateOrder(Long id, OrderInputDto orderInputDto) {
 
         Optional<Order> optionalOrder = orderRepository.findById(id);
@@ -138,12 +128,23 @@ public class OrderService {
             return transferOrderToOutputDto(updatedOrder);
         } else {
             throw new RecordNotFoundException("Order not found!");
-
         }
     }
 
 
-    // Wrapper functie
+    // Function for deleteMapping order.
+    public void deleteOrder(Long id) {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        if (optionalOrder.isEmpty()) {
+            throw new RecordNotFoundException("Order already removed or doesn't exist!");
+        } else {
+            Order orderObj = optionalOrder.get();
+            orderRepository.delete(orderObj);
+        }
+    }
+
+
+    // Mapper method inputDto to order.
     public Order transferInputDtoToOrder(OrderInputDto orderInputDto) {
 
         Order newOrder = new Order();
@@ -152,20 +153,22 @@ public class OrderService {
         newOrder.setPickUpDate(orderInputDto.getPickUpDate());
         newOrder.setTimeFrame(orderInputDto.getTimeFrame());
 
-
         return newOrder;
     }
 
-    // Wrapper Functie
+
+    // Mapper method order to outputDto.
     public OrderOutputDto transferOrderToOutputDto(Order order) {
 
         OrderOutputDto orderOutputDto = new OrderOutputDto();
+        orderOutputDto.setId(order.getId());
+        orderOutputDto.setUserName(order.getUser().getUsername());
+        orderOutputDto.setOrderTotal(order.getOrderTotal());
+        orderOutputDto.setOrderDate(order.getOrderDate());
         orderOutputDto.setProductNames(order.getProducts());
         orderOutputDto.setPickUpDate(order.getPickUpDate());
         orderOutputDto.setTimeFrame(order.getTimeFrame());
 
         return orderOutputDto;
     }
-
-
 }

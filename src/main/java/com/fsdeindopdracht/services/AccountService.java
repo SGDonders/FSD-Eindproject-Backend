@@ -8,8 +8,7 @@ import com.fsdeindopdracht.models.Account;
 import com.fsdeindopdracht.models.User;
 import com.fsdeindopdracht.repositories.AccountRepository;
 import com.fsdeindopdracht.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +21,14 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    @Lazy
-    private PasswordEncoder passwordEncoder;
-
-    public AccountService(AccountRepository accountRepository, UserRepository userRepository) {
+    public AccountService(AccountRepository accountRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     // Function for getMapping one account.
     public AccountOutputDto getAccount(String id) {
@@ -42,6 +40,7 @@ public class AccountService {
             return transferAccountToOutputDto(requestedAccount.get());
         }
     }
+
 
     // Function for getMapping all accounts.
     public List<AccountOutputDto> getAllAccounts() {
@@ -59,17 +58,6 @@ public class AccountService {
         return allAccountsOutputDtoList;
     }
 
-    // Function for deleteMapping one account.
-    public void deleteAccount(String id) {
-        Optional<Account> optionalAccount = accountRepository.findById(id);
-
-        if (optionalAccount.isEmpty()) {
-            throw new RecordNotFoundException("Television already removed or doesn't exist!");
-        } else {
-            Account accountObj = optionalAccount.get();
-            accountRepository.delete(accountObj);
-        }
-    }
 
     // Function for postMapping user/account.
     // (This function stores an user and account at the same time with an oneToOne relation.)
@@ -77,12 +65,12 @@ public class AccountService {
 
         User newUser = new User();
 
-        newUser.setUsername(registerDto.getUsername());
+        newUser.setUsername(registerDto.getUserName());
         newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
         Account newAccount = new Account();
 
-        newAccount.setUserName(registerDto.getUsername());
+        newAccount.setUserName(registerDto.getUserName());
         newAccount.setFirstName(registerDto.getFirstName());
         newAccount.setLastName(registerDto.getLastName());
         newAccount.setZipCode(registerDto.getZipCode());
@@ -102,6 +90,7 @@ public class AccountService {
 
         return transferAccountToOutputDto(newAccount);
     }
+
 
     // Function for putMapping.
     public AccountOutputDto updateProfile( String id, AccountInputDto accountInputDto) {
@@ -125,6 +114,7 @@ public class AccountService {
         }
     }
 
+
     // Function for patchMapping.
     public AccountOutputDto updateAccount(String id, AccountInputDto accountInputDto) {
         Optional<Account> optionalAccount = accountRepository.findById(id);
@@ -132,7 +122,6 @@ public class AccountService {
         if (optionalAccount.isPresent()) {
 
             Account accountUpdate = optionalAccount.get();
-
 
             if (accountInputDto.getFirstName() != null) {
                 accountUpdate.setFirstName(accountInputDto.getFirstName());
@@ -160,6 +149,7 @@ public class AccountService {
         }
     }
 
+
     // Function to assign account to an user.
     public void assignAccountToUser(String id, String accountId) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -175,24 +165,25 @@ public class AccountService {
         }
     }
 
+//
+//    // Mapper method inputDTo to account.
+//    public Account transferInputDtoToAccount(AccountInputDto accountInputDto) {
+//
+//        Account newAccount = new Account();
+//
+//        newAccount.setUserName(accountInputDto.userName);
+//        newAccount.setFirstName(accountInputDto.firstName);
+//        newAccount.setLastName(accountInputDto.lastName);
+//        newAccount.setAddress(accountInputDto.address);
+//        newAccount.setZipCode(accountInputDto.zipCode);
+//        newAccount.setPhoneNumber(accountInputDto.phoneNumber);
+//        newAccount.setEmail(accountInputDto.email);
+//
+//        return newAccount;
+//    }
 
-// Transfer function dto/account----------------------------------------------------------------------------------------
 
-    public Account transferInputDtoToAccount(AccountInputDto accountInputDto) {
-
-        Account newAccount = new Account();
-
-        newAccount.setUserName(accountInputDto.userName);
-        newAccount.setFirstName(accountInputDto.firstName);
-        newAccount.setLastName(accountInputDto.lastName);
-        newAccount.setAddress(accountInputDto.address);
-        newAccount.setZipCode(accountInputDto.zipCode);
-        newAccount.setPhoneNumber(accountInputDto.phoneNumber);
-        newAccount.setEmail(accountInputDto.email);
-
-        return newAccount;
-    }
-
+    // Mapper method account to outputDto.
     public AccountOutputDto transferAccountToOutputDto(Account account) {
 
         AccountOutputDto accountOutputDto = new AccountOutputDto();
@@ -208,7 +199,4 @@ public class AccountService {
 
         return accountOutputDto;
     }
-
-
-
 }

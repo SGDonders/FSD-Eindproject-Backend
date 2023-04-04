@@ -10,7 +10,8 @@ import javax.persistence.*;
 @Setter
 
 @Entity
-public class FileDocument {
+@Table(name= "images")
+public class Image {
 
     @Id
     @GeneratedValue
@@ -27,7 +28,7 @@ public class FileDocument {
     @JoinColumn(name = "product_name")
     private Product product;
 
-    public FileDocument() {
+    public Image() {
     }
 
     public String getFileName() {

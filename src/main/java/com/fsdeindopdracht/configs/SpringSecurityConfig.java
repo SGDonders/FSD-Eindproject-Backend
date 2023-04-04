@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -21,22 +20,22 @@ public class SpringSecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
 
-    public SpringSecurityConfig(CustomUserDetailsService customUserDetailsService, JwtRequestFilter jwtRequestFilter) {
+    private final PasswordEncoder passwordEncoder;
+
+    public SpringSecurityConfig(CustomUserDetailsService customUserDetailsService, JwtRequestFilter jwtRequestFilter, PasswordEncoder passwordEncoder) {
         this.customUserDetailsService = customUserDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
     // Authenticatie met customUserDetailsService en passwordEncoder
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder())
+                .passwordEncoder(passwordEncoder)
                 .and()
                 .build();
     }
@@ -49,35 +48,42 @@ public class SpringSecurityConfig {
                 .httpBasic().disable()
                 .cors().and()
                 .authorizeRequests()
-                // Wanneer je deze uncomments, staat je hele security open. Je hebt dan alleen nog een jwt nodig.
-//                .antMatchers("/**").permitAll()
+
+                //.antMatchers("/**").permitAll() (put all antmatchers on permitAll, you still have to use a JWT.)
 
                 //--------------------------------Endpoint fileupload------------------------------ -------//
-                .antMatchers(HttpMethod.POST, "single/upload/**").permitAll()
+                .antMatchers(HttpMethod.POST, "single/upload/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/download/{fileName}").permitAll()
-                .antMatchers(HttpMethod.POST, "single/uploadDB/**").permitAll()
+                .antMatchers(HttpMethod.POST, "single/uploadDB/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/downloadDB/{fileName}").permitAll()
 
                 //--------------------------------Endpoint orders-------------------------------------------//
-                .antMatchers(HttpMethod.POST, "/order").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/orders").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.GET, "/orders").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/orders").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/orders").hasRole("ADMIN")
 
                 //--------------------------------Endpoint users--------------------------------------------//
                 .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST,"/users/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+
                 //------------------------------Endpoint accounts-------------------------------------------//
                 .antMatchers(HttpMethod.POST, "/accounts").permitAll()
-                .antMatchers(HttpMethod.PUT, "/accounts/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/accounts/**").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.GET,"/accounts").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.POST,"/accounts/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/accounts/**").hasRole("ADMIN")
+
                 //------------------------------Endpoint products-------------------------------------------//
-                .antMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET,"/product").permitAll()
-                .antMatchers(HttpMethod.PATCH,"/product").permitAll()
+                .antMatchers(HttpMethod.GET,"/product/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH,"/product/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST,"/product/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/product/**").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN")
+
                 //----------------------------Endpoint authentication---------------------------------------//
                 .antMatchers("/authenticated").authenticated()
                 .antMatchers("/authenticate").permitAll()
